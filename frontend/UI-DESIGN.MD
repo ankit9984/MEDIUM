@@ -17,6 +17,7 @@ module.exports = {
   variants: {},
   plugins: [],
 };
+```
 
 # NAVBAR => src\components\Navbar.jsx
 
