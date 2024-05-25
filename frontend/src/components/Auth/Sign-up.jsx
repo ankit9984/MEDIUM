@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function RegisterPage() {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { register, error } = useAuth();
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', { name, email, password });
+    try {
+      await register({ username, email, password });
+      setUsername('');
+      setPassword('');
+      setEmail('');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -21,15 +31,15 @@ function RegisterPage() {
     <div className='flex justify-center items-center h-screen'>
       <form className='bg-white p-6 rounded-lg shadow-lg w-full max-w-sm' onSubmit={handleSubmit}>
         <h2 className='text-2xl font-bold mb-4'>Register</h2>
-        
+        {error && <p className='text-red-500'>{error}</p>}
         <div className='mb-4'>
-          <label className='block text-black' htmlFor='name'>Name</label>
+          <label className='block text-black' htmlFor='username'>Username</label>
           <input
             type='text'
-            id='name'
-            name='name'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id='username'
+            name='username'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder='Enter your username...'
             className='mt-1 p-2 w-full border rounded-lg focus:outline-none'
           />
@@ -69,7 +79,7 @@ function RegisterPage() {
         </button>
 
         <div className='mt-4 text-center'>
-          <span className='text-gray-600t'>Already have an account? </span>
+          <span className='text-gray-600'>Already have an account? </span>
           <Link to='/login' className='text-black hover:underline'>Sign In</Link>
         </div>
       </form>

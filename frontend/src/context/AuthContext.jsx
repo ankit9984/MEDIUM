@@ -44,20 +44,27 @@ export const AuthProvider = ({children}) => {
     
     const register = async (newUser) => {
         try {
-            const response = await api.post('/register', newUser);
+            const response = await api.post('/user/register', newUser);
             const data = response.data;
-            if(response.status === 200 ){
+            console.log(data);
+            // if(response.status === 200 ){
                 // Cookie.set('token', data.token);
                 setAuthState((prevState) => ({
                     ...prevState,
                     isAuthenticated: true,
                     user: data.newUser
                 }));
-            }else {
-                throw new Error('Failed to register')
-            }
+                
+                setError(null)
+            // }else {
+            //     throw new Error('Failed to register')
+            // }
         } catch (error) {
-            console.error(error);
+            if(error?.response?.data?.error){
+                setError(error.response.data.error);
+            }else{
+                setError('Failded to register')
+            }
         }
     };
 

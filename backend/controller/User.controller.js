@@ -6,6 +6,10 @@ const registerUser = async (req, res) => {
     try {
         const {username, email, password} = req.body;
 
+        if(!username || !email || !password){
+            return res.status(404).json({error: 'All fields required'})
+        }
+
         // Check if the username oremail already exists
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
