@@ -19,7 +19,6 @@ export const AuthProvider = ({children}) => {
             const response = await api.post('/user/login', credentials);
             console.log(response);
             const data = response.data;
-            console.log(response.status);
             // if(response.status === 200){
                 // Cookie.set('token', data.token);
                 setAuthState((prevState) => ({

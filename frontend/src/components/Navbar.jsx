@@ -2,6 +2,7 @@ import React from 'react'
 import { CiSearch } from "react-icons/ci";
 
 import logo from '../assets/logo.png';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
@@ -21,7 +22,7 @@ function Navbar() {
             </div>
             <div className='flex items-center gap-5'>
                 <CiSearch className='text-xl  custom-min:hidden'/>
-               <button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-up</button>
+               <Link to='/'><button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-up</button></Link>
             </div>
         </nav>
     </div>
