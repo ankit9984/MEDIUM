@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function SignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  //Context api
+  const {login, error} = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', { username, password });
+    try {
+      await login({username, password});
+      setUsername('');
+      setPassword('')
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -21,7 +30,7 @@ function SignIn() {
     <div className='flex justify-center items-center h-screen'>
       <form className='bg-white p-6 rounded-lg shadow-lg w-full max-w-sm' onSubmit={handleSubmit}>
         <h2 className='text-2xl font-bold mb-4'>Login</h2>
-        
+        {error && <div className="text-red-500 mb-4">{error}</div>}
         <div className='mb-4'>
           <label className='block text-black' htmlFor='username'>Username</label>
           <input

@@ -45,7 +45,7 @@ const loginUser = async (req, res) => {
 
         const user = await User.findOne({username});
         if(!user){
-            return res.status(4004).json({error: 'Invalid credentials'})
+            return res.status(404).json({error: 'Invalid credentials'})
         };
 
         const isMatchPassword = await bcrypt.compare(password, user.password);
@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
         };
 
         // Generate token
-        const payload = {id: user._id, username: user.user};
+        const payload = {id: user._id, username: user.username};
         generateToken(res, payload);
 
         res.status(200).json({message: 'Login successfully', user})
