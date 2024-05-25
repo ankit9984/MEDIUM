@@ -9,7 +9,8 @@ function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
 
   //Context api
-  const {login, error} = useAuth();
+  const {login, error, authState} = useAuth();
+  const {isLoading} = authState;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,7 +62,7 @@ function SignIn() {
         </div>
 
         <button type='submit' className='w-full bg-black text-white p-2 rounded-lg hover:bg-gray-600'>
-          Login
+          {isLoading ? 'loading...' : 'Login'}
         </button>
 
         <div className='mt-4 text-center'>

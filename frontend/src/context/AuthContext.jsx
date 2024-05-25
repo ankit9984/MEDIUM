@@ -10,11 +10,13 @@ export const AuthProvider = ({children}) => {
     const [authState, setAuthState] = useState({
         isAuthenticated: false,
         user: null,
+        isLoading: false
     });
 
     const [error, setError] = useState(null);
     
     const login = async (credentials) => {
+        setAuthState((prevState) => ({...prevState, isLoading: true}))
         try {
             const response = await api.post('/user/login', credentials);
             console.log(response);
@@ -39,6 +41,7 @@ export const AuthProvider = ({children}) => {
                 console.log('Failed to login');
             }
         }
+        setAuthState((prevState) => ({...prevState, isLoading: false}))
     }
     
     const register = async (newUser) => {
