@@ -38,7 +38,7 @@ function Navbar() {
                                 <span>Write</span>
                             </div>
                             <IoMdNotifications className='text-3xl cursor-pointer' />
-                            <div className='relative border-rose-400 border-2'>
+                            <div className='relative '>
                                 <div onClick={toggleDropDown} className='w-14 h-10 bg-red-400 rounded-full overflow-hidden cursor-pointer'>
                                     <img className='w-full h-full object-cover' src={logo} alt="" />
                                 </div>
@@ -79,7 +79,7 @@ function Navbar() {
                             </div>
                         </div>
                         :
-                        <Link to='/'><button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-up</button></Link>
+                        <Link to='/sign-up'><button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-up</button></Link>
                     }
                 </div>
             </nav>
