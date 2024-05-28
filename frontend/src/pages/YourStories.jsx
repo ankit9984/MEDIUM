@@ -2,20 +2,28 @@ import React, { useState } from 'react'
 import Draft from '../components/DraftPublished/Draft'
 import Published from '../components/DraftPublished/Published'
 import { Link, useNavigate } from 'react-router-dom';
+import { usePost } from '../context/PostContex';
 
 function YourStories() {
+    const {fetchDrafts, fetchPublic} = usePost();
     const [selectedTab, setSelectedTab] = useState('drafts');
     const navigate = useNavigate();
     
-    const handleTabClick = (tabName) => {
+    const handleTabClick = async (tabName) => {
         setSelectedTab(tabName);
         const validTabs = ['drafts', 'published', 'responses'];
         
         if(validTabs.includes(tabName)){
             navigate(`${tabName}`)
+
+            if(tabName === 'drafts'){
+                await fetchDrafts()
+            }else if(tabName === 'published'){
+                await fetchPublic();
+            }
         }else{
             alert(`Invalid tab name: ${tabName}`);
-        }
+        };
     };
 
     const renderedComponent = () => {

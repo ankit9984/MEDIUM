@@ -70,12 +70,16 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    const logout = () => {
-        Cookie.remove('token');
-        setAuthState({
-            isAuthenticated: false,
-            user: null
-        });
+    const logout = async () => {
+        try {
+            const response = await api.post('/user/logout');
+            setAuthState({
+                isAuthenticated: false,
+                user: null
+            })
+        } catch (error) {
+            console.error('Logout failed');
+        }
     };
 
     return (

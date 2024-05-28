@@ -6,12 +6,16 @@ import { MdContentCopy } from "react-icons/md";
 
 import logo from '../assets/logo.png';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-    const isAuthorized = true;
+    const {authState, logout} = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const dropdownRef = useRef(null);
+    const {isAuthenticated, user} = authState
+
+    console.log(isAuthenticated, user);
 
     const toggleDropDown = () => {
         setIsOpen(!isOpen);
@@ -55,7 +59,7 @@ function Navbar() {
                 </div>
                 <div className='flex items-center gap-5'>
                     <CiSearch className='text-3xl  custom-min:hidden' />
-                    {isAuthorized ?
+                    {isAuthenticated ?
                         <div className='flex items-center justify-between gap-5'>
                             {location.pathname !== '/new-story' ? (
                                 <Link to='/new-story'>
@@ -112,8 +116,8 @@ function Navbar() {
                                         </ul>
                                         <ul className='w-full border my-2'></ul>
                                         <div className='px-4 py-2 items-center cursor-pointer' onClick={toggleDropDown}>
-                                            <p>Sign out</p>
-                                            <span>abc@gmail.com</span>
+                                            <p onClick={() => logout()}>Sign out</p>
+                                            <span>{user.username}</span>
                                         </div>
                                     </div>
                                 )}

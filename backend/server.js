@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import connectDB from './config/db.js';
 import userRoutes from './routes/User.routes.js';
+import postRoutes from './routes/post.routes.js';
 
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 connectDB();
 
 app.use('/api/user', userRoutes);
+app.use('/api/post', postRoutes);
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);

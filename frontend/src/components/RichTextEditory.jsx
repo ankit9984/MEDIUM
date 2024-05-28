@@ -1,48 +1,42 @@
-// Import necessary libraries
-import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import the Quill styles
+import React, { useState } from 'react'
+import { usePost } from '../context/PostContex';
 
-// Define the component
-const RichTextEditor = () => {
-  // Define state to hold the editor content
+function RichTextEditory() {
+  const {createPost, loading, error} = usePost();
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [visibility, setVisibility] = useState('draft');
 
-  // Handle content changes
-  const handleContentChange = (value) => {
-    setContent(value);
-  };
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createPost({title, content, visibility});
+      setTitle('');
+      setContent('');
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div>
-      <ReactQuill 
-        value={content}
-        onChange={handleContentChange}
-        modules={RichTextEditor.modules}
-        formats={RichTextEditor.formats}
-      />
+      <form onSubmit={handleSubmit}>
+            <h2>Create Post</h2>
+            <label htmlFor="title">Title:</label>
+            <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <label htmlFor="content">Content:</label>
+            <textarea id="content" value={content} onChange={(e) => setContent(e.target.value)} required />
+            <label htmlFor="visibility">Visibility:</label>
+            <select id="visibility" value={visibility} onChange={(e) => setVisibility(e.target.value)}>
+                <option value="draft">Draft</option>
+                <option value="public">Public</option>
+            </select>
+            <button type="submit" disabled={loading}>
+                {loading ? 'Creating...' : 'Create Post'}
+            </button>
+            {error && <p className="error">{error}</p>}
+        </form>
     </div>
-  );
-};
+  )
+}
 
-// Define modules and formats
-RichTextEditor.modules = {
-  toolbar: [
-    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-    [{size: []}],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, 
-     {'indent': '-1'}, {'indent': '+1'}],
-    ['link', 'image', 'video'],
-    ['clean']                                        
-  ],
-};
-
-RichTextEditor.formats = [
-  'header', 'font', 'size',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image', 'video'
-];
-
-export default RichTextEditor;
+export default RichTextEditory

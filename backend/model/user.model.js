@@ -15,7 +15,11 @@ const userSchema = new mongoose.Schema({
     password:{
         type: String,
         required: [true, 'Password is required']
-    }
+    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 }, {timestamps: true});
 
 //Hash the password before save
