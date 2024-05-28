@@ -30,9 +30,9 @@ const registerUser = async (req, res) => {
         
         //Generate token 
         const payload = {userId: newUser._id, username: newUser.username};
-        generateToken(res, payload);
+        const token = await generateToken(res, payload);
 
-        res.status(201).json({message: 'User register successfully', newUser})
+        res.status(201).json({message: 'User register successfully', newUser, token})
     } catch (error) {
         if(error.name === 'ValidationError'){
             const message = Object.values(error.errors).map(err => err.message);
@@ -59,9 +59,10 @@ const loginUser = async (req, res) => {
 
         // Generate token
         const payload = {id: user._id, username: user.username};
-        generateToken(res, payload);
+        const token = await generateToken(res, payload)
+        
 
-        res.status(200).json({message: 'Login successfully', user})
+        res.status(200).json({message: 'Login successfully', user, token})
     } catch (error) {
         console.log('Error in loginUser controller', error);
         res.status(500).json({message: 'Internal server error'})

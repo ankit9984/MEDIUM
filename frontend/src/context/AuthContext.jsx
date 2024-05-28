@@ -29,7 +29,8 @@ export const AuthProvider = ({children}) => {
                     user: data.user,
                 }));
 
-                setError(null)
+                setError(null);
+                
             // }else {
             //     throw new Error('Failed to log in');
             // }
