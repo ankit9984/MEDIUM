@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { MdArrowDropDown } from "react-icons/md";
 
 function Published() {
-  const { publicMe, loading, error, fetchPublic } = usePost();
+  const { publicMe, loading, error, fetchPublic, deletePost } = usePost();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -23,7 +23,9 @@ function Published() {
 
   //Function to toggle dropdown menu
   const toggleDropdown = (postId) => {
+    console.log(postId);
     setActiveDropdown(activeDropdown === postId ? null : postId)
+    console.log(activeDropdown);
   }
 
   return (
@@ -37,18 +39,20 @@ function Published() {
               <h4 className="text-lg font-semibold mb-2">{all.title}</h4>
               <p className="text-gray-700 mb-1">{all.content}</p>
               <div className='flex gap-5 items-center'>
-              <p className="text-sm text-gray-500">Created {formatDistanceToNow(new Date(all.createdAt), { addSuffix: true })}</p>
-              <button onClick={() => toggleDropdown(all._id)}><MdArrowDropDown/></button>
-              {/* <p className="text-sm text-gray-500">Last edited {formatDistanceToNow(new Date(all.updatedAt), { addSuffix: true })}</p> */}
-              </div>
-              {
-                activeDropdown === all._id && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
-                  <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => console.log('Edit clicked')}>Edit</button>
-                  <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => console.log('Delete clicked')}>Delete</button>
+                <p className="text-sm text-gray-500">Created {formatDistanceToNow(new Date(all.createdAt), { addSuffix: true })}</p>
+                
+                <div className='relative'>
+                <button onClick={() => toggleDropdown(all._id)}><MdArrowDropDown /></button>
+                {
+                  activeDropdown === all._id && (
+                    <div className="absolute left-0-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
+                      <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => console.log('Edit clicked')}>Edit</button>
+                      <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => deletePost(all._id, fetchPublic)}>Delete</button>
+                    </div>
+                  )
+                }
                 </div>
-                )
-              }
+              </div>
             </li>
           ))}
         </ul>

@@ -49,10 +49,26 @@ export const PostProvider = ({children}) => {
         setError(error.response?.data?.error || 'Error fetching drafts')
 
       }
+    };
+
+    const deletePost = async (postId, callback) => {
+      console.log(callback);
+      try {
+        setLoading(true);
+        await api.delete(`/post/deletepost/${postId}`);
+        setPosts((prevPosts) => prevPosts.filter(post => post._id !== postId));
+        if(callback){
+          callback();
+        }
+        setLoading(false);
+      } catch (error) {
+        setError(error.response?.data?.error || 'Error deleting post');
+        setLoading(false);
+      }
     }
 
     return (
-      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic}}>
+      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost}}>
         {children}
       </PostContext.Provider>
     )

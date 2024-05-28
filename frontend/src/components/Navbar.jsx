@@ -9,11 +9,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-    const {authState, logout} = useAuth();
+    const { authState, logout, fetchDrafts } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const dropdownRef = useRef(null);
-    const {isAuthenticated, user} = authState
+    const { isAuthenticated, user } = authState
 
     console.log(isAuthenticated, user);
 
@@ -96,7 +96,7 @@ function Navbar() {
                                                 <CiBookmark className='text-2xl' />
                                                 <li className='text-xl'>Library</li>
                                             </div>
-                                            <Link to='/me/stories/drafts'>
+                                            <Link to='/me/stories/drafts' onClick={() => fetchDrafts()}>
                                                 <div className='flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>
                                                     <MdContentCopy className='text-2xl' />
                                                     <li className='text-xl'>Stories</li>
@@ -124,7 +124,7 @@ function Navbar() {
                             </div>
                         </div>
                         :
-                        <Link to='/sign-up'><button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-up</button></Link>
+                        <Link to='/login'><button className='bg-black text-white px-2 py-1 rounded-lg'>Sign-in</button></Link>
                     }
                 </div>
             </nav>
