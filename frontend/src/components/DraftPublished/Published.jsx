@@ -19,7 +19,7 @@ function Published() {
 
   // Function to fetch public posts every 60 seconds
   useEffect(() => {
-    const refreshInterval = setInterval(() => fetchPublic(), 60000);
+    const refreshInterval = setInterval(() => fetchPublic(), 10000);
     return () => clearInterval(refreshInterval);
   }, [fetchPublic]);
 

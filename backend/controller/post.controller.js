@@ -112,7 +112,8 @@ const getPublicPost = async (req, res) => {
 
 const getAllPublicPost = async (req, res) => {
     try {
-        const allPublic = await Post.find({visibility: 'public'});
+        const allPublic = await Post.find({visibility: 'public'})
+        .populate({path: 'author', select: 'username'});
         res.status(200).json({message: 'All public posts retrieved successfully', allPublic});
     } catch (error) {
         console.error('Error in getAllPublicPost controller', error);

@@ -8,6 +8,7 @@ export const PostProvider = ({children}) => {
     const [posts, setPosts] = useState([]);
     const [drafts, setDrafts] = useState([]);
     const [publicMe, setPublicME] = useState([])
+    const [publicPost, setPublicPost] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -79,8 +80,21 @@ export const PostProvider = ({children}) => {
       }
     }
 
+    const getAllPublicPost = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/post/getallpublicpost');
+        const allPublic = response.data.allPublic;
+        console.log(allPublic);
+        setPublicPost(allPublic);
+        setLoading(false)
+      } catch (error) {
+        setError('Something went wrong')
+      }
+    }
+
     return (
-      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost}}>
+      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost}}>
         {children}
       </PostContext.Provider>
     )
