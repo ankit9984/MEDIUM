@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePost } from '../context/PostContex';
+import {useNavigate} from 'react-router-dom'
 
-function RichTextEditory() {
-  const { createPost, loading, error } = usePost();
+function RichTextEditory({post}) {
+  const { createPost, updatePost, loading, error} = usePost();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [visibility, setVisibility] = useState('draft');
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(post){
+      setTitle(post.title);
+      setContent(post.content);
+      setVisibility(post.visibility)
+    }
+  },[post])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createPost({ title, content, visibility });
-      setTitle('');
-      setContent('');
+      if(post){
+        await updatePost(post._id, {title, content, visibility});
+        console.log(visibility);
+        if(visibility === 'public'){
+          navigate('/me/stories/published')
+        }else {
+          navigate('/me/stories/draft')
+        }
+      }else {
+        await createPost({ title, content, visibility });
+        setTitle('');
+        setContent('');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +80,7 @@ function RichTextEditory() {
           disabled={loading}
           className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          {loading ? 'Creating...' : 'Create Post'}
+          {loading ? (post ? 'Updating....' : 'Creating...') : (post ? 'Update post' : 'Create post')}
         </button>
         {error && <p className="text-red-500">{error}</p>}
       </form>

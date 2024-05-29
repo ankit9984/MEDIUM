@@ -25,6 +25,18 @@ export const PostProvider = ({children}) => {
         }
     };
 
+    const updatePost = async (postId, postDetails) => {
+      try {
+        setLoading(true);
+        const response = await api.put(`/post/updatepost/${postId}`, postDetails);
+        setPosts(posts.map(post => post._id === postId ? response.data.post : post));
+        setLoading(false);
+      } catch (error) {
+        setError(error.response?.data?.error || 'Error updating post');
+        setLoading(false);
+      }
+    }
+
     const fetchDrafts = async () => {
       try {
         setLoading(true);
@@ -68,7 +80,7 @@ export const PostProvider = ({children}) => {
     }
 
     return (
-      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost}}>
+      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost}}>
         {children}
       </PostContext.Provider>
     )

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePost } from '../../context/PostContex';
 import { formatDistanceToNow } from 'date-fns';
+import {useNavigate} from 'react-router-dom'
 
 import { MdArrowDropDown } from "react-icons/md";
 
@@ -8,6 +9,7 @@ function Published() {
   const { publicMe, loading, error, fetchPublic, deletePost } = usePost();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const navigate = useNavigate();
 
   // Function to update current time every second
   useEffect(() => {
@@ -26,6 +28,11 @@ function Published() {
     console.log(postId);
     setActiveDropdown(activeDropdown === postId ? null : postId)
     console.log(activeDropdown);
+  };
+
+  const handleEditClick = (post) => {
+    // console.log(post);
+    navigate('/new-story', {state: {post}})
   }
 
   return (
@@ -46,7 +53,7 @@ function Published() {
                 {
                   activeDropdown === all._id && (
                     <div className="absolute left-0-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
-                      <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => console.log('Edit clicked')}>Edit</button>
+                      <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleEditClick(all)}>Edit</button>
                       <button className="w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => deletePost(all._id, fetchPublic)}>Delete</button>
                     </div>
                   )

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Cookie from 'js-cookie';
 import api from "../apiServices/Api";
 
@@ -14,6 +14,16 @@ export const AuthProvider = ({children}) => {
     });
 
     const [error, setError] = useState(null);
+
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if(token){
+    //         setAuthState((prevState) => ({
+    //             ...prevState,
+    //             isAuthenticated: true,
+    //           }));
+    //     }
+    // },[]);
     
     const login = async (credentials) => {
         setAuthState((prevState) => ({...prevState, isLoading: true}))
@@ -23,6 +33,7 @@ export const AuthProvider = ({children}) => {
             const data = response.data;
             // if(response.status === 200){
                 // Cookie.set('token', data.token);
+                // localStorage.setItem('token', data.token)
                 setAuthState((prevState) => ({
                     ...prevState,
                     isAuthenticated: true,

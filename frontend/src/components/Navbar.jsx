@@ -15,7 +15,7 @@ function Navbar() {
     const dropdownRef = useRef(null);
     const { isAuthenticated, user } = authState
 
-    console.log(isAuthenticated, user);
+    // console.log(isAuthenticated, user);
 
     const toggleDropDown = () => {
         setIsOpen(!isOpen);
@@ -96,7 +96,7 @@ function Navbar() {
                                                 <CiBookmark className='text-2xl' />
                                                 <li className='text-xl'>Library</li>
                                             </div>
-                                            <Link to='/me/stories/drafts' onClick={() => fetchDrafts()}>
+                                            <Link to='/me/stories' onClick={() => fetchDrafts()}>
                                                 <div className='flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>
                                                     <MdContentCopy className='text-2xl' />
                                                     <li className='text-xl'>Stories</li>
@@ -117,7 +117,7 @@ function Navbar() {
                                         <ul className='w-full border my-2'></ul>
                                         <div className='px-4 py-2 items-center cursor-pointer' onClick={toggleDropDown}>
                                             <p onClick={() => logout()}>Sign out</p>
-                                            <span>{user.username}</span>
+                                            <span>{user?.username}</span>
                                         </div>
                                     </div>
                                 )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { usePost } from '../../context/PostContex'
 import {formatDistanceToNow} from 'date-fns'
+import {useNavigate} from 'react-router-dom'
 
 import { MdArrowDropDown } from "react-icons/md";
 
@@ -8,6 +9,7 @@ function Draft() {
   const {drafts, loading, error, fetchDrafts, deletePost} = usePost();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const navigate = useNavigate();
 
   //Function to update current time every second
   useEffect(() => {
@@ -26,6 +28,10 @@ function Draft() {
     console.log(postId);
     setActiveDropdown(activeDropdown === postId ? null : postId)
     console.log(activeDropdown);
+  }
+
+  const handleEditPost = (post) => {
+    navigate('/new-story', {state: {post}})
   }
   
   return (
@@ -46,7 +52,7 @@ function Draft() {
                     {
                       activeDropdown === draft._id && (
                         <div className='absolute left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg w-48'>
-                          <button className='w-full text-left px-4 py-2 hover:bg-gray-100'>Edit</button>
+                          <button className='w-full text-left px-4 py-2 hover:bg-gray-100' onClick={() => handleEditPost(draft)}>Edit</button>
                           <button className='w-full text-left px-4 py-2 hover:bg-gray-100' onClick={() => deletePost(draft._id, fetchDrafts)}>Delete</button>
                         </div>
                       )
