@@ -15,25 +15,25 @@ export const AuthProvider = ({children}) => {
 
     const [error, setError] = useState(null);
 
-    // useEffect(() => {
-    //     const token = localStorage.getItem('token');
-    //     if(token){
-    //         setAuthState((prevState) => ({
-    //             ...prevState,
-    //             isAuthenticated: true,
-    //           }));
-    //     }
-    // },[]);
-    
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        console.log(token);
+        if(token){
+            setAuthState(prevState => ({
+                ...prevState,
+                isAuthenticated:true
+            }))
+        }
+    },[])
+
+  
     const login = async (credentials) => {
         setAuthState((prevState) => ({...prevState, isLoading: true}))
         try {
             const response = await api.post('/user/login', credentials);
             console.log(response);
             const data = response.data;
-            // if(response.status === 200){
-                // Cookie.set('token', data.token);
-                // localStorage.setItem('token', data.token)
+                localStorage.setItem('token', data.token, {expires: 1});
                 setAuthState((prevState) => ({
                     ...prevState,
                     isAuthenticated: true,
@@ -41,10 +41,7 @@ export const AuthProvider = ({children}) => {
                 }));
 
                 setError(null);
-                
-            // }else {
-            //     throw new Error('Failed to log in');
-            // }
+            
         } catch (error) {
             if(error?.response?.data?.error){
                 console.log(error.response.data.error);
@@ -61,8 +58,6 @@ export const AuthProvider = ({children}) => {
             const response = await api.post('/user/register', newUser);
             const data = response.data;
             console.log(data);
-            // if(response.status === 200 ){
-                // Cookie.set('token', data.token);
                 setAuthState((prevState) => ({
                     ...prevState,
                     isAuthenticated: true,
@@ -70,10 +65,7 @@ export const AuthProvider = ({children}) => {
                 }));
                 
                 setError(null)
-            // }else {
-            //     throw new Error('Failed to register')
-            // }
-        } catch (error) {
+                    } catch (error) {
             if(error?.response?.data?.error){
                 setError(error.response.data.error);
             }else{
@@ -85,6 +77,7 @@ export const AuthProvider = ({children}) => {
     const logout = async () => {
         try {
             const response = await api.post('/user/logout');
+            localStorage.removeItem('token')
             setAuthState({
                 isAuthenticated: false,
                 user: null
@@ -93,6 +86,8 @@ export const AuthProvider = ({children}) => {
             console.error('Logout failed');
         }
     };
+
+    
 
     return (
         <AuthContext.Provider value={{authState, register, login, logout, error}}>
