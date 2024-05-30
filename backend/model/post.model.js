@@ -19,7 +19,11 @@ const PostSchema = new mongoose.Schema({
         type: String,
         enum: ['public', 'draft'],
         default: 'draft'
-    }
+    },
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Like'
+    }],
 }, {timestamps: true});
 
 const Post = mongoose.model('Post', PostSchema);

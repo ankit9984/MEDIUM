@@ -6,6 +6,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import userRoutes from './routes/User.routes.js';
 import postRoutes from './routes/post.routes.js';
+import likeRoutes from './routes/likeUnlike.routes.js';
 
 
 const app = express();
@@ -26,6 +27,7 @@ connectDB();
 
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
+app.use('/api', likeRoutes);
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);

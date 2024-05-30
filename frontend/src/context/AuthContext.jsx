@@ -17,7 +17,6 @@ export const AuthProvider = ({children}) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log(token);
         if(token){
             setAuthState(prevState => ({
                 ...prevState,
@@ -76,12 +75,13 @@ export const AuthProvider = ({children}) => {
 
     const logout = async () => {
         try {
+            localStorage.removeItem('token');
             const response = await api.post('/user/logout');
-            localStorage.removeItem('token')
+            console.log(response);
             setAuthState({
                 isAuthenticated: false,
                 user: null
-            })
+            });
         } catch (error) {
             console.error('Logout failed');
         }

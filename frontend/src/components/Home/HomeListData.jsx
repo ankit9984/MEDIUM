@@ -7,12 +7,16 @@ import { CiSaveUp2, CiSettings } from "react-icons/ci";
 import { FaComment } from "react-icons/fa";
 
 function HomeListData() {
-    const {publicPost} = usePost();
+    const {publicPost, toggleLike} = usePost();
     const [activeDropdown, setActiveDropdown] = useState(null);
 
     const handleSetting = (postId) => {
         setActiveDropdown(activeDropdown === postId ? null : postId);
         console.log(activeDropdown);
+    }
+
+    const handleLike = (postId) => {
+        toggleLike(postId);
     }
 
     console.log(publicPost);
@@ -34,7 +38,7 @@ function HomeListData() {
                         </div>
                         <div className='flex justify-between items-center mt-4'>
                             <div className='flex gap-2'>
-                                <p className='flex gap-2 items-center'><FaHandsClapping/>10</p>
+                                <p className='flex gap-2 items-center' onClick={() => handleLike(post._id)}><FaHandsClapping/>{post.likes.length}</p>
                                 <p className='flex gap-2 items-center'><FaComment/>10</p>
                             </div>
                            <div className='relative'>

@@ -93,8 +93,23 @@ export const PostProvider = ({children}) => {
       }
     }
 
+    const toggleLike = async (postId) => {
+      console.log(postId);
+      try {
+          setLoading(true);
+          const response = await api.post(`/like/${postId}`);
+          const updatedPost = response.data.post;
+          setPublicPost(publicPost.map(post => post._id === postId ? updatedPost : post));
+          console.log(publicPost);
+          setLoading(false);
+      } catch (error) {
+          setError(error.response?.data?.error || 'Error toggling like');
+          setLoading(false);
+      }
+  };
+
     return (
-      <PostContext.Provider value={{posts, loading, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost}}>
         {children}
       </PostContext.Provider>
     )
