@@ -6,6 +6,8 @@ const toggleLikePost = async (req, res) => {
         const userId = req.user.id;
         const { postId } = req.params;
 
+        console.log(userId);
+
         // Check if the user already liked the post
         const existingLike = await Like.findOne({ user: userId, post: postId });
 
@@ -48,6 +50,7 @@ const toggleLikePost = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 export {
     toggleLikePost

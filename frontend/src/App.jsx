@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import NewStory from './pages/NewStory';
 import YourStories from './pages/YourStories';
+import HomePageDeatils from './pages/HomePageDeatils';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/me/stories' element={<YourStories/>}>
             <Route path=':tabName' element={<YourStories/>} />
           </Route>
+          <Route path='/:author/:title' element={<HomePageDeatils/>} />
         </Routes>
       </Router>
     </div>

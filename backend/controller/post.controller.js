@@ -186,6 +186,38 @@ const deletePost = async (req, res) => {
     }
 }
 
+const getPostLikes = async (req, res) => {
+    try {
+        const {postId} = req.params;
+
+        //check if postId is a valid MongoDB objectId
+        if(!mongoose.Types.ObjectId.isValid(postId)){
+            return res.status(400).json({message: 'Invalid post ID'})
+        }
+
+        //Find the post by its ID
+        const post = await Post.findById(postId);
+        if(!post){
+            return res.status(404).json({error: 'Post not found'})
+        };
+
+        //Populate the 'likes' field to get the details of user who liked the post
+        await post.populate({
+            path: 'likes',
+            populate: {path: 'user', select: 'username'}
+        });
+
+        //Extract the likes data from the post
+        const likes = post.likes.map(like => like.user.username);
+        console.log(likes);
+
+        res.status(200).json({message: 'Post likes retrieved successfully', likes})
+    } catch (error) {
+        console.error('Error in getPostLikes controller', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+}
+
 export {
     createPost,
     getDraftPost,
@@ -193,5 +225,6 @@ export {
     getAllPublicPost,
     getPostById,
     updatePost,
-    deletePost
+    deletePost,
+    getPostLikes
 }

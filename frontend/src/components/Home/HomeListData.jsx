@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
 import { usePost } from '../../context/PostContex';
 import {formatDistanceToNow} from 'date-fns'
+import {useNavigate} from 'react-router-dom'
 
 import { FaHandsClapping } from "react-icons/fa6";
 import { CiSaveUp2, CiSettings } from "react-icons/ci";
 import { FaComment } from "react-icons/fa";
 
 function HomeListData() {
+    const navigate = useNavigate();
     const {publicPost, toggleLike} = usePost();
     const [activeDropdown, setActiveDropdown] = useState(null);
 
     const handleSetting = (postId) => {
         setActiveDropdown(activeDropdown === postId ? null : postId);
-        console.log(activeDropdown);
+        // console.log(activeDropdown);
     }
 
     const handleLike = (postId) => {
         toggleLike(postId);
+    };
+
+   
+
+    const handlePostClick = (author, title) => {
+        navigate(`/${author}/${title.replace(/\s+/g, '-').toLowerCase()}`)
     }
 
-    console.log(publicPost);
+    // console.log(publicPost);
     return (
         <div className="max-w-2xl mx-auto">
             {publicPost.length > 0 ? (
@@ -33,12 +41,12 @@ function HomeListData() {
                             </div>
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-                            <p className="text-gray-700">{post.content}</p>
+                            <h2 className="text-xl font-bold mb-2" onClick={() => handlePostClick(post.author?.username, post.title)}>{post.title}</h2>
+                            <p className="text-gray-700" onClick={() => handlePostClick(post.author?.username, post.title)}>{post.content}</p>
                         </div>
                         <div className='flex justify-between items-center mt-4'>
                             <div className='flex gap-2'>
-                                <p className='flex gap-2 items-center' onClick={() => handleLike(post._id)}><FaHandsClapping/>{post.likes.length}</p>
+                                <p className='flex gap-2 items-center cursor-pointer' onClick={() => handleLike(post._id)}><FaHandsClapping/>{post.likes.length}</p>
                                 <p className='flex gap-2 items-center'><FaComment/>10</p>
                             </div>
                            <div className='relative'>
