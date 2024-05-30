@@ -9,6 +9,7 @@ export const PostProvider = ({children}) => {
     const [drafts, setDrafts] = useState([]);
     const [publicMe, setPublicME] = useState([])
     const [publicPost, setPublicPost] = useState([]);
+    const [whoLikes, setWhoLikes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -86,7 +87,7 @@ export const PostProvider = ({children}) => {
         setLoading(true);
         const response = await api.get('/post/getallpublicpost');
         const allPublic = response.data.allPublic;
-        console.log(allPublic);
+        // console.log(allPublic);
         setPublicPost(allPublic);
         setLoading(false)
       } catch (error) {
@@ -108,9 +109,21 @@ export const PostProvider = ({children}) => {
       }
   };
   
+  const likerPersons = async (postId) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/post/getlikes/${postId}`);
+      setWhoLikes(response.data.likes);
+      console.log(whoLikes);
+      setLoading(false);
+    } catch (error) {
+      setError(error.response?.data?.error || 'Something went wrong');
+      console.log(error);
+    }
+  }
 
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons}}>
         {children}
       </PostContext.Provider>
     )

@@ -108,9 +108,79 @@ const logoutUser = async (req, res) => {
     }
 }
 
+const followUser = async (req, res) => {
+    try {
+        const currentUserId = req.user.id;
+        const {userId} = req.params;
+
+        console.log(userId, currentUserId);
+
+        if(currentUserId === userId){
+            return res.status(400).json({message: 'You can\'t follow yourself'})
+        };
+        
+        const currentUser = await User.findById(currentUserId);
+        const userToFollow = await User.findById(userId);
+
+        if(!currentUser || !userToFollow){
+            return res.status(400).json(404).json({error: 'User not found'})
+        };
+
+        if(currentUser.following.includes(userId)){
+            return res.status(400).json({message: 'You already follow this user'});
+        }
+
+        currentUser.following.push(userId);
+        userToFollow.followers.push(currentUser);
+
+        await currentUser.save();
+        await userToFollow.save();
+        
+        res.status(200).json({message: 'User followed succefully'});
+    } catch (error) {
+        console.error('Error in followUser controller', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const unFollowUser = async (req, res) => {
+    try {
+        const currentUserId = req.user.id;
+        const {userId} = req.params;
+
+        if(currentUserId === userId){
+            return res.status(400).json({error: 'You can\'t unfollow yourself'});
+        };
+
+        const currentUser = await User.findById(currentUserId);
+        const userToUnfollow = await User.findById(userId);
+
+        if(!currentUser || !userToUnfollow){
+            return res.status(400).json({error: 'User not found'});
+        };
+
+        if(!currentUser.following.includes(userId)){
+            return res.status(400).json({error: 'You don\'t follow this user'});
+        };
+
+        currentUser.following.pull(userToUnfollow);
+        userToUnfollow.followers.pull(currentUser);
+
+        await currentUser.save();
+        await userToUnfollow.save();
+
+        res.status(200).json({message: 'User unfollowed successfully'});
+    } catch (error) {
+        console.error('Error in unfollowUser controller', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 export {
     registerUser,
     loginUser,
     updateUser,
-    logoutUser
+    logoutUser,
+    followUser,
+    unFollowUser
 }
