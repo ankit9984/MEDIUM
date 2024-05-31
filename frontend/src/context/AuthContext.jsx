@@ -87,10 +87,28 @@ export const AuthProvider = ({children}) => {
         }
     };
 
+    const followUser = async (userId) => {
+        try {
+            const response = await api.post(`/user/follow/${userId}`);
+            console.log(response);
+        } catch (error) {
+            setError(error.response?.data?.error || 'something went wrong')
+        }
+    };
+
+    const unFollowUser = async (userId) => {
+        try {
+            const response = await api.post(`/user/unfollow/${userId}`);
+            console.log(response);
+        } catch (error) {
+            console.error('Error unfollowing user:', error);
+        }
+    }
+
     
 
     return (
-        <AuthContext.Provider value={{authState, register, login, logout, error}}>
+        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser}}>
             {children}
         </AuthContext.Provider>
     );

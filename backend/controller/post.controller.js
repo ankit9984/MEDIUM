@@ -208,7 +208,7 @@ const getPostLikes = async (req, res) => {
         });
 
         //Extract the likes data from the post
-        const likes = post.likes.map(like => like.user.username);
+        const likes = post.likes.map(like => like.user);
         console.log(likes);
 
         res.status(200).json({message: 'Post likes retrieved successfully', likes})

@@ -14,7 +14,7 @@ export const PostProvider = ({children}) => {
     const [error, setError] = useState(null);
 
     // console.log(posts);
-    // console.log(publicPost);
+    console.log(whoLikes);
 
     const createPost = async (postDetails) => {
         try {
@@ -113,8 +113,9 @@ export const PostProvider = ({children}) => {
     try {
       setLoading(true);
       const response = await api.get(`/post/getlikes/${postId}`);
+      // console.log(response);
       setWhoLikes(response.data.likes);
-      console.log(whoLikes);
+      // console.log(whoLikes);
       setLoading(false);
     } catch (error) {
       setError(error.response?.data?.error || 'Something went wrong');
