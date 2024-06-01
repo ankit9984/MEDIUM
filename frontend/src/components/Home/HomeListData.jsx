@@ -18,10 +18,6 @@ function HomeListData() {
 
     const {user} = authState;
 
-    console.log(authState);
-    console.log(user);
-    console.log(publicPost);
-
     const handleSetting = (postId) => {
         setActiveDropdown(activeDropdown === postId ? null : postId);
         // console.log(activeDropdown);

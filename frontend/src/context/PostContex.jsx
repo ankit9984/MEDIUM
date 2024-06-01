@@ -14,7 +14,7 @@ export const PostProvider = ({children}) => {
     const [error, setError] = useState(null);
 
     // console.log(posts);
-    console.log(whoLikes);
+    // console.log(whoLikes);
 
     const createPost = async (postDetails) => {
         try {

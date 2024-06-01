@@ -13,7 +13,13 @@ export const AuthProvider = ({children}) => {
         isLoading: false
     });
 
+    // console.log(authState.user);
+
+    const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
+
+    console.log(following);
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -90,7 +96,7 @@ export const AuthProvider = ({children}) => {
     const followUser = async (userId) => {
         try {
             const response = await api.post(`/user/follow/${userId}`);
-            console.log(response);
+            // console.log(response);
         } catch (error) {
             setError(error.response?.data?.error || 'something went wrong')
         }
@@ -99,16 +105,24 @@ export const AuthProvider = ({children}) => {
     const unFollowUser = async (userId) => {
         try {
             const response = await api.post(`/user/unfollow/${userId}`);
-            console.log(response);
+            // console.log(response);
         } catch (error) {
             console.error('Error unfollowing user:', error);
         }
     }
 
-    
+    const getFollowing = async () => {
+        try {
+            const response = await api.get('/user/getfollowing');
+            const data = response.data;
+            setFollowing(data.following);
+        } catch (error) {
+            setError(error.response?.data?.error || 'Something went wrong')
+        }
+    }
 
     return (
-        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser}}>
+        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser, getFollowing, following}}>
             {children}
         </AuthContext.Provider>
     );
