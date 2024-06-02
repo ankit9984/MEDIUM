@@ -78,7 +78,7 @@ function PostDetails() {
                     </div>
                 </div>
                 <div className="prose prose-lg">
-                    <p className="text-gray-700 leading-relaxed">{post.content}</p>
+                    <p className="text-gray-700 leading-relaxed text-2xl">{post.content}</p>
                 </div>
             </div>
             <div className="mt-8">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePost } from '../../context/PostContex';
-import {formatDistanceToNow} from 'date-fns'
-import {useNavigate} from 'react-router-dom'
+import { formatDistanceToNow } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 import { FaHandsClapping } from "react-icons/fa6";
 import { CiSaveUp2, CiSettings } from "react-icons/ci";
@@ -11,12 +11,12 @@ import { useAuth } from '../../context/AuthContext';
 
 function HomeListData() {
     const navigate = useNavigate();
-    const {publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost} = usePost();
-    const {authState} = useAuth();
+    const { publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost } = usePost();
+    const { authState } = useAuth();
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [showLikesPerson, setShowLikesPerson] = useState(false);
 
-    const {user} = authState;
+    const { user } = authState;
 
     const handleSetting = (postId) => {
         setActiveDropdown(activeDropdown === postId ? null : postId);
@@ -27,13 +27,18 @@ function HomeListData() {
         toggleLike(postId);
     };
 
-   const handleLikePerson = (postId) => {
+    const handleLikePerson = (postId) => {
         likerPersons(postId);
         setShowLikesPerson(true)
-   }
+    }
 
     const handlePostClick = (author, title) => {
         navigate(`/${author}/${title.replace(/\s+/g, '-').toLowerCase()}`)
+    }
+
+    const handleClickAuthor = (authorId, authorUsername) => {
+        console.log(`Navigating to /@${authorUsername}`);
+        navigate(`/@${authorUsername}`)
     }
 
     // console.log(publicPost);
@@ -45,8 +50,8 @@ function HomeListData() {
                         <div className="flex items-center mb-2">
                             <div className="flex-shrink-0 w-10 h-10 mr-3 rounded-full bg-gray-200"></div>
                             <div>
-                                <h2 className="text-lg font-semibold">{post.author?.username}</h2>
-                                <p className="text-sm text-gray-500">Date: {formatDistanceToNow(new Date(post.createdAt), {addSuffix: true})}</p>
+                                <h2 className="text-lg font-semibold" onClick={() => handleClickAuthor(post.author?._id, post.author?.username)}>{post.author?.username}</h2>
+                                <p className="text-sm text-gray-500">Date: {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</p>
                             </div>
                         </div>
                         <div>
@@ -55,35 +60,35 @@ function HomeListData() {
                         </div>
                         <div className='flex justify-between items-center mt-4'>
                             <div className='flex gap-2'>
-                                <p className='flex gap-2 items-center cursor-pointer'><FaHandsClapping  onClick={() => handleLike(post._id)}/><span onClick={() => handleLikePerson(post._id)}>{post.likes.length}</span></p>
-                                <p className='flex gap-2 items-center'><FaComment/>10</p>
+                                <p className='flex gap-2 items-center cursor-pointer'><FaHandsClapping onClick={() => handleLike(post._id)} /><span onClick={() => handleLikePerson(post._id)}>{post.likes.length}</span></p>
+                                <p className='flex gap-2 items-center'><FaComment />10</p>
                             </div>
-                           <div className='relative'>
-                           <div className='flex gap-2 text-2xl'>
-                                <span><CiSaveUp2/></span>
-                                <span onClick={() => handleSetting(post._id)} className='cursor-pointer'><CiSettings/></span>
-                            </div>
-                            {activeDropdown === post._id && (
-                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
-                                <div className='border-b'>
-                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Unfollow Author</button>
-                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Follow Author</button>
+                            <div className='relative'>
+                                <div className='flex gap-2 text-2xl'>
+                                    <span><CiSaveUp2 /></span>
+                                    <span onClick={() => handleSetting(post._id)} className='cursor-pointer'><CiSettings /></span>
                                 </div>
-                                <div className='border-b'>
-                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Mute Author</button>
-                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Block Author</button>
-                                </div>
-                                <div className='border-b'>
-                                    <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Report story</button>
-                                </div>
-                                {user && user._id === post.author._id && (
-                                    <div>
-                                        <button className='w-full text-left px-4 py-2 hover:bg-red-300 text-red-500' onClick={() => deletePost(post._id, getAllPublicPost)}>Delete</button>
+                                {activeDropdown === post._id && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
+                                        <div className='border-b'>
+                                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Unfollow Author</button>
+                                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Follow Author</button>
+                                        </div>
+                                        <div className='border-b'>
+                                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Mute Author</button>
+                                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Block Author</button>
+                                        </div>
+                                        <div className='border-b'>
+                                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Report story</button>
+                                        </div>
+                                        {user && user._id === post.author._id && (
+                                            <div>
+                                                <button className='w-full text-left px-4 py-2 hover:bg-red-300 text-red-500' onClick={() => deletePost(post._id, getAllPublicPost)}>Delete</button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
-                                </div>
-                            )}
-                           </div>
+                            </div>
                         </div>
                     </div>
                 ))

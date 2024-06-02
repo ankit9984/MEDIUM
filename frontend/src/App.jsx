@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import NewStory from './pages/NewStory';
 import YourStories from './pages/YourStories';
 import HomePageDeatils from './pages/HomePageDeatils';
+import AuthorPostPage from './pages/AuthorPostPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path=':tabName' element={<YourStories/>} />
           </Route>
           <Route path='/:author/:title' element={<HomePageDeatils/>} />
+          <Route path='/:username' element={<AuthorPostPage />} />
         </Routes>
       </Router>
     </div>

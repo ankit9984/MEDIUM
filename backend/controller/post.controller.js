@@ -218,6 +218,27 @@ const getPostLikes = async (req, res) => {
     }
 }
 
+
+const getPublicPostOfAuthorById = async (req, res) => {
+    try {
+        const {authorId} = req.params;
+
+        const user = await User.findById(authorId);
+        if(!user){
+            return res.status(404).json({error: 'Public post not found'})
+        };
+        
+        const posts = await Post.find({author: authorId, visibility: 'public'})
+        .select('title content likes createdAt updatedAt')
+
+        res.status(200).json(posts);
+        
+    } catch (error) {
+        console.log('Error in getPublicPostOfAuthorById controller', error);
+        res.status(500).json({error: 'Internal server error'})
+    }
+}
+
 export {
     createPost,
     getDraftPost,
@@ -226,5 +247,6 @@ export {
     getPostById,
     updatePost,
     deletePost,
-    getPostLikes
+    getPostLikes,
+    getPublicPostOfAuthorById
 }
