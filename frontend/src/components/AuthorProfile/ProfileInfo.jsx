@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { CiSettings } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { usePost } from '../../context/PostContex';
 
 function ProfileInfo() {
+    const {authorInfo} = useAuth();
+    const {getAuthorPosts} = usePost();
     const [dropDown, setDropDown] = useState(false)
     const [activeButton, setActiveButton] = useState(null)
 
@@ -17,10 +21,11 @@ function ProfileInfo() {
         setDropDown(!dropDown);
     }
 
-    const handleButton = (label, index) => {
+    const handleButton = (label, index, authorId) => {
         setActiveButton(index);
         if('Home' === label){
-            // alert('Home')
+            // alert(authorId)
+            getAuthorPosts(authorId)
         }
         if('About' === label){
             // alert('About')
@@ -33,15 +38,15 @@ function ProfileInfo() {
                 <div className='flex items-center'>
                     <div className='flex-shrink-0 w-16 h-16 mr-4 rounded-full bg-gray-500'></div>
                     <div>
-                        <h2 className='text-2xl font-bold'>{username}</h2>
-                        <p className='text-gray-600'>1000 followers</p>
+                        <h2 className='text-2xl font-bold'>{authorInfo.username}</h2>
+                        <p className='text-gray-600'>{authorInfo.followers?.length} followers</p>
                     </div>
                 </div>
                 <div className='flex gap-5 mt-10'>
                 {list.map((label, index) => (
                             <button key={index}
                             className={activeButton === index ? 'text-green-400' : 'text-black'}
-                            onClick={() => handleButton(label, index)}>
+                            onClick={() => handleButton(label, index, authorInfo._id)}>
                                 {label}
                             </button>
                         ))}

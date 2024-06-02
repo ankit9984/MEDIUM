@@ -14,11 +14,11 @@ export const AuthProvider = ({children}) => {
     });
 
     // console.log(authState.user);
-
+    const [authorInfo, setAuthorInfo] = useState([]);
     const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
 
-    console.log(following);
+    console.log(authorInfo);
 
 
     useEffect(() => {
@@ -121,8 +121,19 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const getAuthorInfo = async (authorId) => {
+        try {
+            const response = await api.get(`/user/getauthorinfo/${authorId}`);
+            const data = response.data;
+            setAuthorInfo(data.userInfo)
+        } catch (error) {
+            setError(error.response?.data?.error);
+            console.log(error);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser, getFollowing, following}}>
+        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser, getFollowing, following, authorInfo, getAuthorInfo}}>
             {children}
         </AuthContext.Provider>
     );

@@ -10,10 +10,11 @@ export const PostProvider = ({children}) => {
     const [publicMe, setPublicME] = useState([])
     const [publicPost, setPublicPost] = useState([]);
     const [whoLikes, setWhoLikes] = useState([]);
+    const [authorPost, setAuthorPost] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // console.log(posts);
+    console.log(authorPost);
     // console.log(whoLikes);
 
     const createPost = async (postDetails) => {
@@ -123,8 +124,23 @@ export const PostProvider = ({children}) => {
     }
   }
 
+  const getAuthorPosts = async (authorId) => {
+    console.log(authorId);
+    try {
+      setLoading(true);
+      const response = await api.get(`/post/getPublicOfAuthor/${authorId}`);
+      const data = response.data;
+      console.log(data);
+      setAuthorPost(data.authorPosts);
+      setLoading(false);
+    } catch (error) {
+      setError(error.response?.data?.error);
+      console.log(error);
+    }
+  }
+
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts}}>
         {children}
       </PostContext.Provider>
     )

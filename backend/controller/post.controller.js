@@ -227,11 +227,25 @@ const getPublicPostOfAuthorById = async (req, res) => {
         if(!user){
             return res.status(404).json({error: 'Public post not found'})
         };
-        
-        const posts = await Post.find({author: authorId, visibility: 'public'})
-        .select('title content likes createdAt updatedAt')
 
-        res.status(200).json(posts);
+        const authorPosts = await Post.find({author: authorId, visibility: 'public'})
+        .select('title content likes createdAt updatedAt')
+        .populate('author', 'username email followers')
+        
+        // const authorPosts = await Post.find({author: authorId, visibility: 'public'})
+        // .select('title content likes createdAt updatedAt').lean();
+
+        // const postsWithUserDetails = authorPosts.map(post => ({
+        //     ...post,
+        //     authorDetails: {
+        //         username: user.username,
+        //         email: user.email,
+        //         followers: user.followers
+        //     }
+        // }))
+
+        // res.status(200).json({message: 'Author post retrieved successfully', authorPosts: postsWithUserDetails});
+        res.status(200).json({message: 'Author post retrieved successfully', authorPosts})
         
     } catch (error) {
         console.log('Error in getPublicPostOfAuthorById controller', error);

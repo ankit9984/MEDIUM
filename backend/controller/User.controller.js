@@ -198,6 +198,24 @@ const getFollowing = async (req, res) => {
 }
 
 
+const getAuthorInfo = async (req, res) => {
+    try {
+        const {authorId} = req.params;
+
+        const userInfo = await User.findById(authorId).select('username followers');
+        // console.log(userInfo);
+        if(!userInfo){
+            res.status(400).json({error: 'User not found'})
+        };
+
+        res.status(200).json({message: "User info get succefully", userInfo})
+    } catch (error) {
+        console.log('Error in getAuthorInfo controller', error);
+        res.status(500).json({error: 'Internal server error'})
+    }
+}
+
+
 
 export {
     registerUser,
@@ -206,5 +224,6 @@ export {
     logoutUser,
     followUser,
     unFollowUser,
-    getFollowing
+    getFollowing,
+    getAuthorInfo
 }

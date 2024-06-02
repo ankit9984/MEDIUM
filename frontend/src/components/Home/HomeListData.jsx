@@ -12,7 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 function HomeListData() {
     const navigate = useNavigate();
     const { publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost } = usePost();
-    const { authState } = useAuth();
+    const { authState, getAuthorInfo } = useAuth();
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [showLikesPerson, setShowLikesPerson] = useState(false);
 
@@ -39,6 +39,7 @@ function HomeListData() {
     const handleClickAuthor = (authorId, authorUsername) => {
         console.log(`Navigating to /@${authorUsername}`);
         navigate(`/@${authorUsername}`)
+        getAuthorInfo(authorId)
     }
 
     // console.log(publicPost);
@@ -50,7 +51,7 @@ function HomeListData() {
                         <div className="flex items-center mb-2">
                             <div className="flex-shrink-0 w-10 h-10 mr-3 rounded-full bg-gray-200"></div>
                             <div>
-                                <h2 className="text-lg font-semibold" onClick={() => handleClickAuthor(post.author?._id, post.author?.username)}>{post.author?.username}</h2>
+                                <h2 className="text-lg font-semibold cursor-pointer hover:font-bold" onClick={() => handleClickAuthor(post.author?._id, post.author?.username)}>{post.author?.username}</h2>
                                 <p className="text-sm text-gray-500">Date: {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</p>
                             </div>
                         </div>
