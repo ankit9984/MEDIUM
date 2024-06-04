@@ -14,8 +14,8 @@ export const PostProvider = ({children}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    console.log(authorPost);
-    // console.log(whoLikes);
+    // console.log(authorPost);
+    console.log(publicPost);
 
     const createPost = async (postDetails) => {
         try {

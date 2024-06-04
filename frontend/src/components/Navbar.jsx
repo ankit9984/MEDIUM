@@ -80,7 +80,7 @@ function Navbar() {
                                     <img className='w-full h-full object-cover' src={logo} alt="" />
                                 </div>
                                 {isOpen && (
-                                    <div className='absolute right-0 mt-2 w-60 bg-white border rounded-lg shadow-lg'>
+                                    <div className='absolute right-0 mt-2 w-60 bg-white border rounded-lg shadow-lg z-10'>
                                         <ul>
                                             <Link to='/new-story'>
                                                 <div className='custom-min:hidden flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>

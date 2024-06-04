@@ -13,22 +13,41 @@ export const AuthProvider = ({children}) => {
         isLoading: false
     });
 
+    console.log(authState);
+
     // console.log(authState.user);
     const [authorInfo, setAuthorInfo] = useState([]);
     const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
 
-    console.log(authorInfo);
+    // console.log(authorInfo);
 
+
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if(token){
+    //         setAuthState(prevState => ({
+    //             ...prevState,
+    //             isAuthenticated:true
+    //         }))
+    //     }
+    // },[])
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if(token){
-            setAuthState(prevState => ({
-                ...prevState,
-                isAuthenticated:true
-            }))
-        }
+        const fetchUser = async () => {
+            try {
+                const response = await api.get('/user/getuser');
+                const data = response.data;
+                setAuthState({
+                    isAuthenticated: true,
+                    user: data.user,
+                    isLoading: false
+                });
+            } catch (error) {
+                console.error('Failed to fetch user:', error);
+            }
+        };
+        fetchUser();
     },[])
 
   

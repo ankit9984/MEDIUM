@@ -161,7 +161,7 @@ const deletePost = async (req, res) => {
     try {
         const userId = req.user.id;
         const {postId} = req.params;
-
+        console.log(postId);
         const user = await User.findById(userId);
         if(!user){
             return res.status(401).json({message: 'Unauthorized access'});
@@ -222,7 +222,7 @@ const getPostLikes = async (req, res) => {
 const getPublicPostOfAuthorById = async (req, res) => {
     try {
         const {authorId} = req.params;
-
+        console.log(authorId);
         const user = await User.findById(authorId);
         if(!user){
             return res.status(404).json({error: 'Public post not found'})

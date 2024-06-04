@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 function SignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   //Context api
   const {login, error, authState} = useAuth();
@@ -18,6 +20,7 @@ function SignIn() {
       await login({username, password});
       setUsername('');
       setPassword('')
+      navigate('/')
     } catch (error) {
       console.error('Login failed:', error);
     }
