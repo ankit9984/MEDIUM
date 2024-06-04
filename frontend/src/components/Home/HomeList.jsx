@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { usePost } from '../../context/PostContex';
 
 function HomeList() {
-    const [activeButton, setActiveButton] = useState(null);
+    const [activeButton, setActiveButton] = useState(0);
     const {getAllPublicPost} = usePost();
 
     const button = [
@@ -14,9 +14,9 @@ function HomeList() {
         'JavaScript',
     ];
 
-    const handleClick = async (index) => {
+    const handleClick = async (data, index) => {
       setActiveButton(index);
-      if(index === 0){
+      if(data === 'For You'){
         await getAllPublicPost();
       }
     }
@@ -29,7 +29,7 @@ function HomeList() {
             className={`flex-shrink-0 text-xl  rounded ${
                 activeButton === index ? 'border-b-4 border-b-black' : ''
             } text-black`} 
-            onClick={() => handleClick(index)}>
+            onClick={() => handleClick(label, index)}>
                 {label}
             </button>
         ))}

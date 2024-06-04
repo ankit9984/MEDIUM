@@ -12,23 +12,27 @@ function ProfilePostInfo() {
 
     const [activeDropdown, setActiveDropdown] = useState(null);
     
-    // useEffect(() => {
-    //     if (authorInfo?._id) {
-    //         getAuthorPosts(authorInfo._id);
-    //     }
-    // }, [authorInfo, getAuthorPosts]);
-
+    
     const handleSetting = (postId) => {
         // alert(postId)
         setActiveDropdown(activeDropdown === postId ? null : postId)
     }
 
-    const handleDelete = async (postId, authorPost) => {
-        console.log(postId);
-        console.log(authorPost);
-        await deletePost(postId, authorPost)
-    }
+    
 
+    // const handleDelete = async (postId, authorId) => {
+    //     // Call deletePost with a callback function
+    //     await deletePost(postId, async () => {
+    //       // Refetch author posts after deletion (using callback)
+    //       await getAuthorPosts(authorId); // Assuming authorInfo has _id
+    //     });
+    //   };
+
+    const handleDelete = async (postId, authorId) => {
+        await deletePost(postId, async () => {
+            await getAuthorPosts(authorId)
+        })
+    }
    
     return (
         <div>
@@ -72,7 +76,7 @@ function ProfilePostInfo() {
                                             </div>
                                             {user && user._id === post.author._id && (
                                             <div>
-                                                <button className='w-full text-left px-4 py-2 hover:bg-red-300 text-red-500' onClick={() => handleDelete(post._id, getAuthorPosts(post.author._id))}>Delete</button>
+                                                <button className='w-full text-left px-4 py-2 hover:bg-red-300 text-red-500' onClick={() => handleDelete(post._id, post.author._id)}>Delete</button>
                                             </div>
                                         )}
                                         </div>
@@ -80,6 +84,7 @@ function ProfilePostInfo() {
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 ))
             }

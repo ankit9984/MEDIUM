@@ -15,7 +15,7 @@ export const PostProvider = ({children}) => {
     const [error, setError] = useState(null);
 
     // console.log(authorPost);
-    console.log(publicPost);
+    // console.log(publicPost);
 
     const createPost = async (postDetails) => {
         try {
@@ -68,7 +68,6 @@ export const PostProvider = ({children}) => {
     };
 
     const deletePost = async (postId, callback) => {
-      console.log(callback);
       try {
         setLoading(true);
         await api.delete(`/post/deletepost/${postId}`);
