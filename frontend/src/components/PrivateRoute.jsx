@@ -10,6 +10,7 @@ function PrivateRoute() {
     if(isLoading){
         return <h1>Loading.....</h1>
     }
+    console.log(isAuthenticated);
     
     return isAuthenticated ? <Outlet/> : <Navigate to='/login' />
 }

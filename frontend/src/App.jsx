@@ -18,7 +18,7 @@ function App() {
         <Routes>
           <Route path='/sign-up' element={<RegisterPage />} />
           <Route path='/login' element={<LoginPage />} />
-          <Route >
+          <Route>
             <Route path='/' element={<HomePage />} />
             <Route path='/new-story' element={<NewStory />} />
             <Route path='/me/stories' element={<YourStories />}>
