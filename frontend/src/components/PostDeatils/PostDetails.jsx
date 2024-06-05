@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaHandsClapping } from "react-icons/fa6";
 import { FaComment } from "react-icons/fa";
@@ -10,22 +10,28 @@ import { usePost } from '../../context/PostContex';
 
 function PostDetails() {
     const { author, title } = useParams();
-    const { publicPost, toggleLike} = usePost();
+    const { publicPost, getAllPublicPost, toggleLike} = usePost();
     const [dropdown, setDropDown] = useState(null);
+    const [post, setPost] = useState(null);
 
-    // const post = publicPost.find(post =>
-    //     post.author?.username === author && post.title.replace(/\s+/g, '-').toLowerCase() === title
-    // );
+    useEffect(() => {
+        const fetchPosts = async () => {
+            await getAllPublicPost();
+        };
+        fetchPosts();
+    }, []);
 
-    let post;
-    for (let i = 0; i < publicPost.length; i++) {
-        const currentPost = publicPost[i];
-        console.log(currentPost);
-        if (currentPost.author?.username === author && currentPost.title.replace(/\s+/g, '-').toLowerCase() === title) {
-            post = currentPost;
-            break; // Stop looping once the post is found
+    useEffect(() => {
+        if (publicPost.length > 0) {
+            // Find the post matching the author and title
+            const foundPost = publicPost.find(post =>
+                post.author?.username === author && post.title.replace(/\s+/g, '-').toLowerCase() === title
+            );
+            setPost(foundPost);
         }
-    }
+    }, [publicPost, author, title]);
+
+    console.log(post);
 
     if (!post) {
         return <p>Post not found</p>;

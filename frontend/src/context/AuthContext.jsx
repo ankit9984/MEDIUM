@@ -13,7 +13,7 @@ export const AuthProvider = ({children}) => {
         isLoading: false
     });
 
-    console.log(authState);
+    // console.log(authState);
 
     // console.log(authState.user);
     const [authorInfo, setAuthorInfo] = useState([]);
@@ -141,6 +141,7 @@ export const AuthProvider = ({children}) => {
     }
 
     const getAuthorInfo = async (authorId) => {
+        
         try {
             const response = await api.get(`/user/getauthorinfo/${authorId}`);
             const data = response.data;

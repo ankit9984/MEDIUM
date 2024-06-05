@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiSettings } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { usePost } from '../../context/PostContex';
 
 function ProfileInfo() {
-    const {authorInfo} = useAuth();
+    const {authorInfo, getAuthorInfo} = useAuth();
     const {getAuthorPosts} = usePost();
     const [dropDown, setDropDown] = useState(false)
     const [activeButton, setActiveButton] = useState(null)
@@ -14,7 +14,9 @@ function ProfileInfo() {
     const list = [
         'Home',
         'About'
-    ]
+    ];
+
+    
 
     const { username } = useParams();
     const handleSetting = () => {

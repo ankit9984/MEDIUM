@@ -36,10 +36,15 @@ function HomeListData() {
         navigate(`/${author}/${title.replace(/\s+/g, '-').toLowerCase()}`)
     }
 
-    const handleClickAuthor = (authorId, authorUsername) => {
+    const handleClickAuthor = async (authorId, authorUsername) => {
+        if (!authorId) {
+            console.error("Author ID is undefined");
+            return;
+        }
+        console.log(authorId);
         console.log(`Navigating to /@${authorUsername}`);
         navigate(`/@${authorUsername}`)
-        getAuthorInfo(authorId)
+        await getAuthorInfo(authorId)
     }
 
     // console.log(publicPost);

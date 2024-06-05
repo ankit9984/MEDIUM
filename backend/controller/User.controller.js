@@ -201,9 +201,9 @@ const getFollowing = async (req, res) => {
 const getAuthorInfo = async (req, res) => {
     try {
         const {authorId} = req.params;
-
+        console.log(authorId);
         const userInfo = await User.findById(authorId).select('username followers');
-        // console.log(userInfo);
+        console.log(userInfo);
         if(!userInfo){
             res.status(400).json({error: 'User not found'})
         };
