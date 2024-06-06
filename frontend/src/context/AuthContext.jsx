@@ -17,7 +17,7 @@ export const AuthProvider = ({children}) => {
 
     // console.log(authState.user);
     const [authorInfo, setAuthorInfo] = useState([]);
-    const [following, setFollowing] = useState([]);
+    // const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
 
     // console.log(authorInfo);
@@ -112,36 +112,36 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    const followUser = async (userId) => {
-        try {
-            const response = await api.post(`/user/follow/${userId}`);
-            // console.log(response);
-        } catch (error) {
-            setError(error.response?.data?.error || 'something went wrong')
-        }
-    };
+    // const followUser = async (userId) => {
+    //     try {
+    //         const response = await api.post(`/user/follow/${userId}`);
+    //         // console.log(response);
+    //     } catch (error) {
+    //         setError(error.response?.data?.error || 'something went wrong')
+    //     }
+    // };
 
-    const unFollowUser = async (userId) => {
-        try {
-            const response = await api.post(`/user/unfollow/${userId}`);
-            // console.log(response);
-        } catch (error) {
-            console.error('Error unfollowing user:', error);
-        }
-    }
+    // const unFollowUser = async (userId) => {
+    //     try {
+    //         const response = await api.post(`/user/unfollow/${userId}`);
+    //         // console.log(response);
+    //     } catch (error) {
+    //         console.error('Error unfollowing user:', error);
+    //     }
+    // }
 
-    const getFollowing = async () => {
-        try {
-            const response = await api.get('/user/getfollowing');
-            const data = response.data;
-            setFollowing(data.following);
-        } catch (error) {
-            setError(error.response?.data?.error || 'Something went wrong')
-        }
-    }
+    // const getFollowing = async () => {
+    //     try {
+    //         const response = await api.get('/user/getfollowing');
+    //         const data = response.data;
+    //         setFollowing(data.following);
+    //     } catch (error) {
+    //         setError(error.response?.data?.error || 'Something went wrong')
+    //     }
+    // }
 
     const getAuthorInfo = async (authorId) => {
-        
+        console.log(authorId);
         try {
             const response = await api.get(`/user/getauthorinfo/${authorId}`);
             const data = response.data;
@@ -153,7 +153,7 @@ export const AuthProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={{authState, register, login, logout, error, followUser, unFollowUser, getFollowing, following, authorInfo, getAuthorInfo}}>
+        <AuthContext.Provider value={{authState, register, login, logout, error, authorInfo, getAuthorInfo}}>
             {children}
         </AuthContext.Provider>
     );

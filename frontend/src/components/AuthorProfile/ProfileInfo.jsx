@@ -8,17 +8,21 @@ function ProfileInfo() {
     const {authorInfo, getAuthorInfo} = useAuth();
     const {getAuthorPosts} = usePost();
     const [dropDown, setDropDown] = useState(false)
-    const [activeButton, setActiveButton] = useState(null)
+    const [activeButton, setActiveButton] = useState(0)
 
+    // console.log(authorInfo._id);
     
     const list = [
         'Home',
         'About'
     ];
 
-    
-
     const { username } = useParams();
+
+    useEffect(() => {
+        getAuthorInfo(authorInfo._id)
+    },[])
+
     const handleSetting = () => {
         setDropDown(!dropDown);
     }

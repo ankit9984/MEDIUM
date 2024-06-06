@@ -1,6 +1,7 @@
 import express from 'express';
-import { followUser, getAuthorInfo, getFollowing, getUser, loginUser, logoutUser, registerUser, unFollowUser, updateUser } from '../controller/User.controller.js';
+import {  getAuthorInfo, getUser, loginUser, logoutUser, registerUser, updateUser } from '../controller/User.controller.js';
 import { verifyToken } from '../middleware/Auth.middleware.js';
+import validateObjectId from '../middleware/validObjectId.middleware.js';
 
 const router = express.Router();
 
@@ -11,9 +12,7 @@ router.post('/logout', verifyToken, logoutUser);
 router.get('/getuser', verifyToken, getUser);
 
 //FollowandUnfollow User
-router.post('/follow/:userId', verifyToken, followUser);
-router.post('/unfollow/:userId', verifyToken, unFollowUser);
-router.get('/getfollowing', verifyToken, getFollowing);
-router.get('/getauthorinfo/:authorId', verifyToken, getAuthorInfo);
+
+router.get('/getauthorinfo/:authorId', verifyToken, validateObjectId, getAuthorInfo);
 
 export default router;

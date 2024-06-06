@@ -37,8 +37,9 @@ function HomeListData() {
     }
 
     const handleClickAuthor = async (authorId, authorUsername) => {
-        if (!authorId) {
-            console.error("Author ID is undefined");
+        console.log(authorId);
+        if (!authorId || !authorId.match(/^[0-9a-fA-F]{24}$/)) {
+            console.error("Invalid or undefined Author ID:", authorId);
             return;
         }
         console.log(authorId);

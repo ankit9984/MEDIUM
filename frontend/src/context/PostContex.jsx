@@ -15,7 +15,7 @@ export const PostProvider = ({children}) => {
     const [error, setError] = useState(null);
 
     // console.log(authorPost);
-    console.log(publicPost);
+    // console.log(publicPost);
 
     const createPost = async (postDetails) => {
         try {
