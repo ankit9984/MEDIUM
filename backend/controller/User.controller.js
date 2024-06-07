@@ -108,7 +108,38 @@ const logoutUser = async (req, res) => {
     }
 }
 
+const followUser = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const {userToFollowId} = req.params;
 
+        if(userId === userToFollowId){
+            return res.status(400).json({error: 'You cannot follow yourself'});
+        };
+
+        const user = await User.findById(userId);
+        const userToFollow = await User.findById(userToFollowId);
+
+        if(!user || !userToFollow){
+            return res.status(404).json({error: 'User not found'})
+        };
+
+        if(user.following.includes(userToFollowId)){
+            return res.status(400).json({error: 'You are already followin this id'})
+        };
+
+        user.following.push(userToFollowId);
+        userToFollow.followers.push(userId);
+
+        await user.save();
+        await userToFollow.save();
+
+        res.status(200).json({message: 'user followed successfully'})
+    } catch (error) {
+        console.error('Error in followUser controller', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
 
 
 const getAuthorInfo = async (req, res) => {
@@ -152,5 +183,6 @@ export {
     updateUser,
     logoutUser,
     getAuthorInfo,
-    getUser
+    getUser,
+    followUser
 }
