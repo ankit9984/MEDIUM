@@ -5,45 +5,42 @@ import { useAuth } from '../context/AuthContext';
 
 function WhoLikesThisPost() {
     const { whoLikes } = usePost();
-    const { authState, error } = useAuth();
-    const [followingStatus] = useState({});
+    const { authState, followUser, unFollowUser, error } = useAuth();
+    const [followingStatus, setFollowingStatus] = useState({});
 
-    console.log(followingStatus);
+    useEffect(() => {
+        // Initialize the following status for each person
+        if (authState.user) {
+            const initialStatus = {};
+            whoLikes.forEach(person => {
+                initialStatus[person._id] = authState.user.following.includes(person._id);
+            });
+            setFollowingStatus(initialStatus);
+        }
+    }, [whoLikes, authState.user]);
 
-    // useEffect(() => {
-    //     // Initialize the following status for each person
-    //     if (authState.user) {
-    //         const initialStatus = {};
-    //         whoLikes.forEach(person => {
-    //             initialStatus[person._id] = authState.user.following.includes(person._id);
-    //         });
-    //         setFollowingStatus(initialStatus);
-    //     }
-    // }, [whoLikes, authState.user]);
-
-    // const handleFollowUnfollow = async (personId) => {
-    //     if (authState.isAuthenticated) {
-    //         if (personId === authState.user._id) {
-    //             console.log('Cannot follow yourself');
-    //             return;
-    //         }
-    //         const isFollowing = followingStatus[personId];
-    //         console.log(isFollowing);
-    //         setFollowingStatus({ ...followingStatus, [personId]: !isFollowing }); // Optimistically update UI
-    //         try {
-    //             if (isFollowing) {
-    //                 await unFollowUser(personId);
-    //             } else {
-    //                 await followUser(personId);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error following/unfollowing user:', error);
-    //             setFollowingStatus({ ...followingStatus, [personId]: isFollowing }); // Revert if error
-    //         }
-    //     } else {
-    //         console.log('User not logged in, cannot follow/unfollow');
-    //     }
-    // };
+    const handleFollowUnfollow = async (personId) => {
+        if (authState.isAuthenticated) {
+            if (personId === authState.user._id) {
+                console.log('Cannot follow yourself');
+                return;
+            }
+            const isFollowing = followingStatus[personId];
+            setFollowingStatus({ ...followingStatus, [personId]: !isFollowing }); // Optimistically update UI
+            try {
+                if (isFollowing) {
+                    await unFollowUser(personId);
+                } else {
+                    await followUser(personId);
+                }
+            } catch (error) {
+                console.error('Error following/unfollowing user:', error);
+                setFollowingStatus({ ...followingStatus, [personId]: isFollowing }); // Revert if error
+            }
+        } else {
+            console.log('User not logged in, cannot follow/unfollow');
+        }
+    };
 
     return (
         <div className="p-4 bg-white rounded-lg shadow-lg">
@@ -58,9 +55,11 @@ function WhoLikesThisPost() {
                         </div>
                         {/* Follow button - Check if user is already following and display appropriate button */}
                         <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                            >
-                                Follow
+                            className={`px-4 py-2 rounded ${followingStatus[person._id] ? 'bg-red-500' : 'bg-blue-500'} text-white`}
+                            onClick={() => handleFollowUnfollow(person._id)}
+                            disabled={authState.isLoading}
+                        >
+                            {followingStatus[person._id] ? 'Unfollow' : 'Follow'}
                         </button>
                     </li>
                 ))}

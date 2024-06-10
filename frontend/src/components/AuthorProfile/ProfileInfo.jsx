@@ -5,13 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 import { usePost } from '../../context/PostContex';
 
 function ProfileInfo() {
-    const {authorInfo, getAuthorInfo} = useAuth();
-    const {getAuthorPosts} = usePost();
-    const [dropDown, setDropDown] = useState(false)
-    const [activeButton, setActiveButton] = useState(0)
+    const { authorInfo, getAuthorInfo, followUser, unFollowUser, authState } = useAuth();
+    const { getAuthorPosts } = usePost();
+    const [dropDown, setDropDown] = useState(false);
+    const [activeButton, setActiveButton] = useState(0);
 
-    // console.log(authorInfo._id);
-    
     const list = [
         'Home',
         'About'
@@ -19,9 +17,10 @@ function ProfileInfo() {
 
     const { username } = useParams();
 
-    useEffect(() => {
-        getAuthorInfo(authorInfo._id)
-    },[])
+    // useEffect(() => {
+    //     getAuthorInfo(username);
+    // }, [username, getAuthorInfo]);
+
 
     const handleSetting = () => {
         setDropDown(!dropDown);
@@ -29,15 +28,23 @@ function ProfileInfo() {
 
     const handleButton = (label, index, authorId) => {
         setActiveButton(index);
-        if('Home' === label){
-            // alert(authorId)
-            getAuthorPosts(authorId)
+        if ('Home' === label) {
+            getAuthorPosts(authorId);
         }
-        if('About' === label){
-            // alert('About')
+        if ('About' === label) {
+            // Handle About logic here
         }
-    }
+    };
 
+    const handleFollow = () => {
+        followUser(authorInfo._id);
+    };
+
+    const handleUnfollow = () => {
+        unFollowUser(authorInfo._id);
+    };
+
+    const isFollowing = authState.user?.following.includes(authorInfo._id);
     return (
         <div className='max-w-2xl mx-auto flex justify-between items-center bg-white p-4 rounded-lg shadow-md'>
             <div className=''>
@@ -49,25 +56,31 @@ function ProfileInfo() {
                     </div>
                 </div>
                 <div className='flex gap-5 mt-10'>
-                {list.map((label, index) => (
-                            <button key={index}
+                    {list.map((label, index) => (
+                        <button key={index}
                             className={activeButton === index ? 'text-green-400' : 'text-black'}
                             onClick={() => handleButton(label, index, authorInfo._id)}>
-                                {label}
-                            </button>
-                        ))}
+                            {label}
+                        </button>
+                    ))}
                 </div>
             </div>
             <div className='relative'>
                 <div className='flex items-center space-x-4'>
-                    <button className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'>Follow</button>
-                    <CiSettings className='text-2xl cursor-pointer text-gray-600 hover:text-gray-800' onClick={() => handleSetting()} />
+                    {isFollowing ? (
+                        <button onClick={handleUnfollow} className='px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600'>Unfollow</button>
+                    ) : (
+                        <button onClick={handleFollow} className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'>
+                            Follow
+                        </button>
+                    )}
+                    <CiSettings className='text-2xl cursor-pointer text-gray-600 hover:text-gray-800' onClick={handleSetting} />
                 </div>
                 {dropDown && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg z-10">
                         <div className='border-b'>
-                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Unfollow Author</button>
-                            <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Follow Author</button>
+                            <button onClick={handleUnfollow} className="w-full text-left px-4 py-2 hover:bg-gray-100">Unfollow Author</button>
+                            <button onClick={handleFollow} className="w-full text-left px-4 py-2 hover:bg-gray-100">Follow Author</button>
                         </div>
                         <div className='border-b'>
                             <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Mute Author</button>
@@ -76,7 +89,6 @@ function ProfileInfo() {
                         <div className='border-b'>
                             <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Report story</button>
                         </div>
-
                     </div>
                 )}
             </div>

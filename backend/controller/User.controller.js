@@ -141,6 +141,39 @@ const followUser = async (req, res) => {
     }
 }
 
+const unFollowUser = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { userToUnfollowId } = req.params;
+        console.log(userId, userToUnfollowId);
+        if (userId === userToUnfollowId) {
+            return res.status(400).json({ error: 'You cannot unfollow yourself' });
+        }
+
+        const user = await User.findById(userId);
+        const userToUnfollow = await User.findById(userToUnfollowId);
+
+        if (!user || !userToUnfollow) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (!user.following.includes(userToUnfollowId)) {
+            return res.status(400).json({ error: 'You are not following this user' });
+        }
+
+        user.following = user.following.filter(id => id.toString() !== userToUnfollowId);
+        userToUnfollow.followers = userToUnfollow.followers.filter(id => id.toString() !== userId);
+
+        await user.save();
+        await userToUnfollow.save();
+
+        res.status(200).json({ message: 'User unfollowed successfully' });
+    } catch (error) {
+        console.error('Error in unFollowUser controller', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 
 const getAuthorInfo = async (req, res) => {
     try {
@@ -184,5 +217,6 @@ export {
     logoutUser,
     getAuthorInfo,
     getUser,
-    followUser
+    followUser,
+    unFollowUser
 }

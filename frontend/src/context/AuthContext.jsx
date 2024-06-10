@@ -20,18 +20,7 @@ export const AuthProvider = ({children}) => {
     // const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
 
-    // console.log(authorInfo);
-
-
-    // useEffect(() => {
-    //     const token = localStorage.getItem('token');
-    //     if(token){
-    //         setAuthState(prevState => ({
-    //             ...prevState,
-    //             isAuthenticated:true
-    //         }))
-    //     }
-    // },[])
+    
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -111,35 +100,7 @@ export const AuthProvider = ({children}) => {
             console.error('Logout failed');
         }
     };
-
-    // const followUser = async (userId) => {
-    //     try {
-    //         const response = await api.post(`/user/follow/${userId}`);
-    //         // console.log(response);
-    //     } catch (error) {
-    //         setError(error.response?.data?.error || 'something went wrong')
-    //     }
-    // };
-
-    // const unFollowUser = async (userId) => {
-    //     try {
-    //         const response = await api.post(`/user/unfollow/${userId}`);
-    //         // console.log(response);
-    //     } catch (error) {
-    //         console.error('Error unfollowing user:', error);
-    //     }
-    // }
-
-    // const getFollowing = async () => {
-    //     try {
-    //         const response = await api.get('/user/getfollowing');
-    //         const data = response.data;
-    //         setFollowing(data.following);
-    //     } catch (error) {
-    //         setError(error.response?.data?.error || 'Something went wrong')
-    //     }
-    // }
-
+    
     const getAuthorInfo = async (authorId) => {
         console.log(authorId);
         try {
@@ -152,8 +113,46 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const followUser = async (userIdToFollow) => {
+        try {
+            setAuthState((prevState) => ({...prevState, isLoading: true}));
+            const response = await api.post(`user/follow/${userIdToFollow}`);
+            const updatedUser = response.data.user;
+            setAuthState((prevState) => ({
+                ...prevState,
+                user: {
+                    ...prevState.user,
+                    following: [...prevState.user.following, userIdToFollow],
+                },
+                isLoading: false
+            }));
+        } catch (error) {
+            setError(error.response?.data?.error || 'Failed to follow user');
+            setAuthState((prevState) => ({ ...prevState, isLoading: false}));
+        }
+    }
+
+    const unFollowUser = async (userIdToUnfollow) => {
+        try {
+            setAuthState((prevState) => ({ ...prevState, isLoading: true }));
+            const response = await api.post(`/user/unfollow/${userIdToUnfollow}`);
+            const updatedUser = response.data.user;
+            setAuthState((prevState) => ({
+                ...prevState,
+                user: {
+                    ...prevState.user,
+                    following: prevState.user.following.filter((id) => id !== userIdToUnfollow),
+                },
+                isLoading: false,
+            }));
+        } catch (error) {
+            setError(error.response?.data?.error || 'Failed to unfollow user');
+            setAuthState((prevState) => ({ ...prevState, isLoading: false}));
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{authState, register, login, logout, error, authorInfo, getAuthorInfo}}>
+        <AuthContext.Provider value={{authState, register, login, logout, error, authorInfo, getAuthorInfo, followUser, unFollowUser}}>
             {children}
         </AuthContext.Provider>
     );

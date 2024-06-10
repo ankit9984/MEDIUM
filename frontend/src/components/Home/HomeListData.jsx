@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 
 function HomeListData() {
     const navigate = useNavigate();
-    const { publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost } = usePost();
+    const { publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost , getAuthorPosts} = usePost();
     const { authState, getAuthorInfo } = useAuth();
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [showLikesPerson, setShowLikesPerson] = useState(false);
@@ -42,10 +42,11 @@ function HomeListData() {
             console.error("Invalid or undefined Author ID:", authorId);
             return;
         }
-        console.log(authorId);
-        console.log(`Navigating to /@${authorUsername}`);
+        // console.log(authorId);
+        // console.log(`Navigating to /@${authorUsername}`);
         navigate(`/@${authorUsername}`)
-        await getAuthorInfo(authorId)
+        await getAuthorInfo(authorId);
+        await getAuthorPosts(authorId)
     }
 
     // console.log(publicPost);
