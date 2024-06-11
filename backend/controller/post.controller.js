@@ -253,6 +253,45 @@ const getPublicPostOfAuthorById = async (req, res) => {
     }
 }
 
+const followingPost = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({error: 'User not found'})
+        }
+
+        // const posts = await Post.find({author: {$in: user.following}, visibility: 'public'}).sort({createdAt: -1});
+
+        let posts = [];
+        //fetch posts each followed user
+        for(const followedId of user.following){
+            console.log(followedId);
+            const userPosts = await Post.find({author: followedId, visibility: 'public'});
+            posts = posts.concat(userPosts);
+            console.log(posts);
+        }
+
+        // const following = user.following;
+        // for(let i=0; i<following.length; i++){
+        //     const followedId = following[i]
+        //     console.log(followedId);
+        //     const userPosts = await Post.find({author: followedId, visibility: 'public'});
+        //     posts = posts.concat(userPosts);
+        // }
+
+        // Sort the combined posts array by createdAt in descending order
+        posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        res.status(200).json({message: 'Following posts fetched successfully', posts})
+    } catch (error) {
+        console.error('Error in followingPost controller', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 export {
     createPost,
     getDraftPost,
@@ -262,5 +301,6 @@ export {
     updatePost,
     deletePost,
     getPostLikes,
-    getPublicPostOfAuthorById
+    getPublicPostOfAuthorById,
+    followingPost
 }

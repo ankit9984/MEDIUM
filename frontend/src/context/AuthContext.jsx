@@ -117,7 +117,8 @@ export const AuthProvider = ({children}) => {
         try {
             setAuthState((prevState) => ({...prevState, isLoading: true}));
             const response = await api.post(`user/follow/${userIdToFollow}`);
-            const updatedUser = response.data.user;
+            const updatedUser = response.data;
+            // console.log(updatedUser);
             setAuthState((prevState) => ({
                 ...prevState,
                 user: {
@@ -150,6 +151,7 @@ export const AuthProvider = ({children}) => {
             setAuthState((prevState) => ({ ...prevState, isLoading: false}));
         }
     };
+    
 
     return (
         <AuthContext.Provider value={{authState, register, login, logout, error, authorInfo, getAuthorInfo, followUser, unFollowUser}}>
