@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 
 function HomeListData() {
     const navigate = useNavigate();
-    const { publicPost, toggleLike, likerPersons, deletePost, getAllPublicPost , getAuthorPosts} = usePost();
+    const { publicPost, fetchFollowingPosts, follwingPosts, toggleLike, likerPersons, deletePost, getAllPublicPost , getAuthorPosts} = usePost();
     const { authState, getAuthorInfo } = useAuth();
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [showLikesPerson, setShowLikesPerson] = useState(false);

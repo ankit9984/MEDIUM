@@ -3,7 +3,7 @@ import { usePost } from '../../context/PostContex';
 
 function HomeList() {
     const [activeButton, setActiveButton] = useState(0);
-    const {getAllPublicPost} = usePost();
+    const {getAllPublicPost, fetchFollowingPosts} = usePost();
 
     const button = [
         'For You',
@@ -18,6 +18,8 @@ function HomeList() {
       setActiveButton(index);
       if(data === 'For You'){
         await getAllPublicPost();
+      }else if(data === 'Following'){
+        await fetchFollowingPosts();
       }
     }
   return (

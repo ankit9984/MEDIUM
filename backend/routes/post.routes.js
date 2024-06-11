@@ -13,6 +13,6 @@ router.get('/getpostbyid/:postId', verifyToken, getPostById);
 router.delete('/deletepost/:postId', verifyToken, deletePost);
 router.get('/getlikes/:postId', verifyToken, getPostLikes);
 router.get('/getPublicOfAuthor/:authorId', verifyToken, getPublicPostOfAuthorById);
-router.post('/followingpost', verifyToken, followingPost);
+router.get('/followingpost', verifyToken, followingPost);
 
 export default router;

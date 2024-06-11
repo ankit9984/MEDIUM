@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import api from "../apiServices/Api";
 
 const PostContext = createContext();
@@ -11,11 +11,17 @@ export const PostProvider = ({children}) => {
     const [publicPost, setPublicPost] = useState([]);
     const [whoLikes, setWhoLikes] = useState([]);
     const [authorPost, setAuthorPost] = useState([]);
+    const [follwingPosts, setFollowingPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     // console.log(authorPost);
     // console.log(publicPost);
+
+  
+
+  console.log(follwingPosts);
+  console.log(publicPost);
 
     const createPost = async (postDetails) => {
         try {
@@ -138,8 +144,21 @@ export const PostProvider = ({children}) => {
     }
   }
 
+  const fetchFollowingPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/post/followingpost');
+      setFollowingPosts(response.data.posts)
+      setLoading(false)
+    } catch (error) {
+      setError(error.response?.data?.error);
+      setLoading(false)
+    }
+  }
+  
+
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts}}>
         {children}
       </PostContext.Provider>
     )
