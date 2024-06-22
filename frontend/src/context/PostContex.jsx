@@ -20,8 +20,8 @@ export const PostProvider = ({children}) => {
 
   
 
-  console.log(follwingPosts);
-  console.log(publicPost);
+  // console.log(follwingPosts);
+  // console.log(publicPost);
 
     const createPost = async (postDetails) => {
         try {

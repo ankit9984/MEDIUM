@@ -5,11 +5,11 @@ import { FaRegUser } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 
 import logo from '../assets/logo.png';
-import { Link, useLocation } from 'react-router-dom';
+import {  Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
-    const { authState, logout, fetchDrafts } = useAuth();
+    const { authState, logout, fetchDrafts, getAuthorInfo } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const dropdownRef = useRef(null);
@@ -33,6 +33,10 @@ function Navbar() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    const handeProfileClick = (id) => {
+        getAuthorInfo(id)
+    }
 
     return (
         <div className='shadow-xl h-16 pt-2.5'>
@@ -88,10 +92,12 @@ function Navbar() {
                                                     <li className='text-xl'>Write</li>
                                                 </div>
                                             </Link>
-                                            <div className='flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>
-                                                <FaRegUser className='text-2xl' />
-                                                <li className='text-xl'>Profile</li>
-                                            </div>
+                                            <Link to={`/@${user._id}`} onClick={() => handeProfileClick(user._id)}>
+                                                <div className='flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>
+                                                    <FaRegUser className='text-2xl' />
+                                                    <li className='text-xl'>Profile</li>
+                                                </div>
+                                            </Link>
                                             <div className='flex px-4 py-2 items-center gap-2 cursor-pointer hover:bg-gray-100 ' onClick={toggleDropDown}>
                                                 <CiBookmark className='text-2xl' />
                                                 <li className='text-xl'>Library</li>

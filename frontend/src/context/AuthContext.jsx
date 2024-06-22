@@ -17,6 +17,7 @@ export const AuthProvider = ({children}) => {
 
     // console.log(authState.user);
     const [authorInfo, setAuthorInfo] = useState([]);
+    console.log(authorInfo);
     // const [following, setFollowing] = useState([]);
     const [error, setError] = useState(null);
 
