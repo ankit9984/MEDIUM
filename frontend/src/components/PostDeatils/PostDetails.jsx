@@ -8,7 +8,7 @@ import { CiSettings, CiSaveUp2 } from "react-icons/ci";
 import { format } from 'date-fns';
 import { usePost } from '../../context/PostContex';
 
-function PostDetails() {
+function PostDetails({onToggleActiveComment}) {
     const { author, title } = useParams();
     const { publicPost, getAllPublicPost, toggleLike} = usePost();
     const [dropdown, setDropDown] = useState(null);
@@ -39,11 +39,11 @@ function PostDetails() {
 
     const handleSetting = (postId) => {
         setDropDown(dropdown === postId ? null : postId);
-    }
+    };
 
     const handleToggleLike = (postId) => {
         toggleLike(postId)
-    }
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-8">
@@ -59,7 +59,7 @@ function PostDetails() {
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-5'>
                         <span className='flex gap-2 items-center' onClick={() => handleToggleLike(post._id)}><FaHandsClapping />10</span>
-                        <span className='flex gap-2 items-center'><FaComment />10</span>
+                        <span onClick={() => onToggleActiveComment(post._id)} className='flex gap-2 items-center'><FaComment />10</span>
                     </div>
                     <div className='relative'>
                         <div className='flex gap-5 text-2xl'>
