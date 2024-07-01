@@ -12,6 +12,7 @@ export const PostProvider = ({children}) => {
     const [whoLikes, setWhoLikes] = useState([]);
     const [authorPost, setAuthorPost] = useState([]);
     const [follwingPosts, setFollowingPosts] = useState([]);
+    const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -156,9 +157,43 @@ export const PostProvider = ({children}) => {
     }
   }
   
+  //Comments
+  const createComment = async (postId, content) => {
+    try {
+      setLoading(true);
+      const response = await api.post(`/post/${postId}/comments`, {content});
+      // console.log(response);
+    } catch (error) {
+      setError(error.response?.data?.error || 'Error adding comment');
+      setLoading(false);
+    }
+  }
+
+  const getComments = async (postId) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/post/${postId}/getcomment`);
+      setComments(response.data.comments || []); // Ensure comments is an array
+      setLoading(false);
+    } catch (error) {
+      setError(error.response?.data?.error || 'Error fetching comments');
+      setLoading(false);
+    }
+  };
+
+  const likeComment = async (commentId) => {
+    try {
+      setLoading(true);
+      const response = await api.post(`/post/${commentId}/likecomment`);
+      console.log(response);
+    } catch (error) {
+      setError(error.response?.data?.error || "Error liking comment");
+      setLoading(false);
+    }
+  }
 
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts, createComment, getComments, comments, likeComment}}>
         {children}
       </PostContext.Provider>
     )

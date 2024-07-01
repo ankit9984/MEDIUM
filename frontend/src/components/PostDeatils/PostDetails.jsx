@@ -31,7 +31,7 @@ function PostDetails({onToggleActiveComment}) {
         }
     }, [publicPost, author, title]);
 
-    console.log(post);
+    // console.log(post);
 
     if (!post) {
         return <p>Post not found</p>;
