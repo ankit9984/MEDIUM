@@ -192,8 +192,21 @@ export const PostProvider = ({children}) => {
     }
   }
 
+  const deleteComment = async (commentId) =>{
+    try {
+      setLoading(true);
+      const response = await api.delete(`/post/${commentId}/deletecomment`);
+      // setComments((prevComments) => 
+      // prevComments.filter((comment) => comment._id !== comment))
+      console.log(response);
+    } catch (error) {
+      setError(error.response?.data?.error || "Error deleting comment");
+      setLoading(false);
+    }
+  }
+
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts, createComment, getComments, comments, likeComment}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts, createComment, getComments, comments, likeComment,deleteComment}}>
         {children}
       </PostContext.Provider>
     )

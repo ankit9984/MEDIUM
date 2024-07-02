@@ -87,31 +87,31 @@ const replyComment = async (req, res) => {
     }
 }
 
-const getComments = async (req, res) => {
-    try {
-        const {postId} = req.params;
+// const getComments = async (req, res) => {
+//     try {
+//         const {postId} = req.params;
 
-        const post = await Post.findById(postId)
-        .populate({
-            path: 'comments',
-            populate: [
-                {path: 'author', select: 'username'},
-                {path: 'likes', select: 'username'},
-                {path: 'replies', populate: {path: 'author', select: 'username'}}
-            ]
-        })
-        .populate('author', 'username');
+//         const post = await Post.findById(postId)
+//         .populate({
+//             path: 'comments',
+//             populate: [
+//                 {path: 'author', select: 'username'},
+//                 {path: 'likes', select: 'username'},
+//                 {path: 'replies', populate: {path: 'author', select: 'username'}}
+//             ]
+//         })
+//         .populate('author', 'username');
 
-        if(!post){
-            return res.status(404).json({error: 'Post not found'})
-        };
+//         if(!post){
+//             return res.status(404).json({error: 'Post not found'})
+//         };
 
-        res.status(200).json(post)
-    } catch (error) {
-        console.error('Error in getComments controller', error);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-};
+//         res.status(200).json(post)
+//     } catch (error) {
+//         console.error('Error in getComments controller', error);
+//         res.status(500).json({ message: 'Internal server error', error: error.message });
+//     }
+// };
 
 const deleteComment = async (req, res) => {
     try {
@@ -141,10 +141,95 @@ const deleteComment = async (req, res) => {
     }
 }
 
+
+const getComments = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findById(postId)
+            .populate({
+                path: 'comments',
+                populate: [
+                    { path: 'author', select: 'username' },
+                    { path: 'likes', select: 'username' }
+                ]
+            })
+            .populate('author', 'username');
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        // Modify the comments to include only the replies length
+        const modifiedComments = post.comments.map(comment => ({
+            ...comment.toObject(),
+            repliesCount: comment.replies.length,
+            replies: undefined // Remove the replies array
+        }));
+
+        // Create a new object with modified comments
+        const responseData = {
+            ...post.toObject(),
+            comments: modifiedComments
+        };
+
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.error('Error in getComments controller', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
+
+const getCommentReplies = async (req, res) => {
+    try {
+        const {commentId} = req.params;
+
+        const comment = await Comment.findById(commentId)
+        .populate('author', 'username')
+        .populate('likes', 'username')
+        .populate({
+            path: 'replies',
+            populate: [
+                {
+                    path: 'author',
+                    select: 'username'
+                },
+                {
+                    path: 'likes',
+                    select: 'username'
+                }
+            ]
+        });
+
+        if(!comment){
+            return res.status(404).json({error: 'Comment not found'})
+        }
+
+        const formattedComment = {
+            _id: comment._id,
+            content: comment.content,
+            author: comment.author,
+            likes: comment.likes,
+            replies: comment.replies.map(reply => ({
+                _id: reply._id,
+                content: reply.content,
+                author: reply.author,
+                likes: reply.likes
+            }))
+        }
+
+        res.status(200).json(formattedComment)
+    } catch (error) {
+        console.error('Error fetching comment replies:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+
 export {
     createComment,
     likeComment,
     replyComment,
     getComments,
-    deleteComment
+    deleteComment,
+    getCommentReplies
 }

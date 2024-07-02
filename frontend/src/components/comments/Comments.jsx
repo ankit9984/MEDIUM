@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { CiSettings } from "react-icons/ci";
 import { PiHandsClapping } from "react-icons/pi";
+import { FaComment } from "react-icons/fa";
 import { formatDistanceToNow } from 'date-fns';
 import { usePost } from '../../context/PostContex';
+import { useAuth } from '../../context/AuthContext';
 
 function Comments({ postId }) {
-  const { createComment, comments, getComments, likeComment } = usePost();
+  const { createComment, comments, getComments, likeComment, deleteComment } = usePost();
+  const {authState} = useAuth();
   const [textareaValue, setTextareaValue] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [show, setShow] = useState(false);
+
+  const {user} = authState
 
   const handleTextareaChange = (event) => {
     setTextareaValue(event.target.value);
@@ -24,6 +30,7 @@ function Comments({ postId }) {
       await createComment(postId, textareaValue);
       setTextareaValue('');
       setResponseMessage('Comment added successfully');
+      setTextareaValue('');
       getComments(postId)
     } catch (error) {
       console.error('Error adding comment:', error);
@@ -38,6 +45,21 @@ function Comments({ postId }) {
       console.log('Error like comment', error);
     }
   }
+
+  const toggleSetting = () => {
+    setShow(!show)
+    console.log(user);
+  }
+
+  const handleDeleteComment = async (commentId) =>{
+    await deleteComment(commentId);
+    await getComments(postId);
+  }
+  console.log(comments);
+  comments.forEach(comment => {
+    console.log(comment.repliesCount);
+  });
+  
 
   const isTextareaEmpty = textareaValue.trim() === '';
 
@@ -84,8 +106,18 @@ function Comments({ postId }) {
                       <p>{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</p>
                     </div>
                   </div>
-                  <div className='text-2xl'>
-                    <span><CiSettings /></span>
+                  <div className='bg-red-50 relative'>
+                    <div className='text-2xl '>
+                      <span onClick={toggleSetting}><CiSettings /></span>
+                    </div>
+                    {show && (
+                      <div className='absolute right-5 shadow-2xl bg-red-50 w-44 text-center'>
+                        <p>Report this comment</p>
+                        {user && user._id === comment.author._id && (
+                          <div onClick={() => handleDeleteComment(comment._id)}>Delete</div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className='border-b-2 p-2'>
@@ -93,9 +125,23 @@ function Comments({ postId }) {
                     <p>{comment.content}</p>
                   </div>
                   <div className='flex justify-between items-center mt-2 text-xl'>
-                    <div className='flex gap-2 items-center'>
-                      <PiHandsClapping onClick={() => handleLikeComment(comment._id)} className='cursor-pointer'/>
-                      <span>{comment.likes.length}</span>
+                    <div className='flex gap-4 items-center'>
+                      <div className='flex items-center gap-1'>
+                        <PiHandsClapping onClick={() => handleLikeComment(comment._id)} className='cursor-pointer'/>
+                        <span>{comment.likes.length}</span>
+                      </div>
+                      {/* {comment && comment.replies.length > 0 && (
+                        <div className='flex items-center gap-1'>
+                          <FaComment/>
+                          <span>{comment.replies.length}</span>
+                        </div>
+                      )} */}
+                      {comment.repliesCount > 0 && (
+                        <div className='flex items-center gap-1'>
+                          <FaComment/>
+                          <span>{comment.repliesCount}</span>
+                        </div>
+                      )}
                     </div>
                     <p>reply</p>
                   </div>
