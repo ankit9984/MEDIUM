@@ -1,7 +1,7 @@
 import express from 'express';
 import { createPost, deletePost, followingPost, getAllPublicPost, getDraftPost, getPostById, getPostLikes, getPublicPost, getPublicPostOfAuthorById, updatePost } from '../controller/post.controller.js';
 import { verifyToken } from '../middleware/Auth.middleware.js';
-import { createComment, getComments, likeComment, replyComment } from '../controller/comment.controller.js';
+import { createComment, deleteComment, getComments, likeComment, replyComment } from '../controller/comment.controller.js';
 
 const router = express.Router();
 
@@ -21,5 +21,6 @@ router.post('/:postId/comments', verifyToken, createComment);
 router.post('/:commentId/likecomment', verifyToken, likeComment);
 router.post('/:commentId/replies', verifyToken, replyComment);
 router.get('/:postId/getcomment', verifyToken, getComments)
+router.delete('/:commentId/deletecomment', verifyToken, deleteComment);
 
 export default router;

@@ -12,8 +12,8 @@ const createComment = async (req, res) => {
             return res.status(404).json({error: 'Post not found'})
         }
 
-        if(!content){
-            return res.status(400).json({error: 'Content is required'});
+        if(!content || typeof content !== 'string'){
+            return res.status(400).json({error: "Content is required and must be a string"});
         };
 
         const newComment = new Comment({
@@ -111,11 +111,40 @@ const getComments = async (req, res) => {
         console.error('Error in getComments controller', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
+};
+
+const deleteComment = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const {commentId} = req.params;
+        const comment = await Comment.findById(commentId);
+        
+        if(!comment){
+            return res.status(404).json({message: 'Comment not found'})
+        };
+
+       if(comment.author.toString() !== userId){
+            return res.status(403).json({message: 'You are not authorized to delete this comment'})
+       };
+
+       await Post.updateOne(
+        {comments: commentId},
+        {$pull: {comments: commentId}}
+       );
+
+       // Delete the comment
+       await Comment.findByIdAndDelete(commentId);
+       res.status(200).json({message: 'Comment delete successfullly'})
+    } catch (error) {
+        console.error('Error in getComments controller', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
 }
 
 export {
     createComment,
     likeComment,
     replyComment,
-    getComments
+    getComments,
+    deleteComment
 }
