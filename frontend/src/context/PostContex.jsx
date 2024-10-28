@@ -13,6 +13,7 @@ export const PostProvider = ({children}) => {
     const [authorPost, setAuthorPost] = useState([]);
     const [follwingPosts, setFollowingPosts] = useState([]);
     const [comments, setComments] = useState([]);
+    const [repliesComments, setRepliesComment] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -174,6 +175,7 @@ export const PostProvider = ({children}) => {
       setLoading(true);
       const response = await api.get(`/post/${postId}/getcomment`);
       setComments(response.data.comments || []); // Ensure comments is an array
+      console.log(response);
       setLoading(false);
     } catch (error) {
       setError(error.response?.data?.error || 'Error fetching comments');
@@ -205,8 +207,28 @@ export const PostProvider = ({children}) => {
     }
   }
 
+  const getCommentReplies = async (commentId) => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/post/${commentId}/commentreplies`);
+      const formattedComment = response.data.replies;
+      console.log(formattedComment);
+      setRepliesComment(formattedComment || []);
+      console.log(repliesComments);
+      // setComments(prevComments => {
+      //   prevComments.map(comment => 
+      //     comment._id === commentId ? formattedComment : comment
+      //   )
+      // });
+      setLoading(false)
+    } catch (error) {
+      setError(error.response?.data?.error || "Error fetching comment replies");
+      setLoading(false);
+    }
+  }
+
     return (
-      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts, createComment, getComments, comments, likeComment,deleteComment}}>
+      <PostContext.Provider value={{posts, loading, toggleLike, error, createPost, fetchDrafts, drafts, publicMe, fetchPublic, deletePost, updatePost, publicPost, getAllPublicPost, whoLikes, likerPersons, authorPost, getAuthorPosts, fetchFollowingPosts, follwingPosts, createComment, getComments, comments, likeComment,deleteComment, getCommentReplies, repliesComments}}>
         {children}
       </PostContext.Provider>
     )

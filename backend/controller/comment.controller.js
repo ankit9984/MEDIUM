@@ -182,7 +182,7 @@ const getComments = async (req, res) => {
 const getCommentReplies = async (req, res) => {
     try {
         const {commentId} = req.params;
-
+        console.log(commentId);
         const comment = await Comment.findById(commentId)
         .populate('author', 'username')
         .populate('likes', 'username')
@@ -217,7 +217,7 @@ const getCommentReplies = async (req, res) => {
             }))
         }
 
-        res.status(200).json(formattedComment)
+        res.status(200).json({replies: formattedComment})
     } catch (error) {
         console.error('Error fetching comment replies:', error);
         res.status(500).json({ error: 'Internal server error' });

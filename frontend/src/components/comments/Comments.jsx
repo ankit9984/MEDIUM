@@ -8,13 +8,14 @@ import { usePost } from '../../context/PostContex';
 import { useAuth } from '../../context/AuthContext';
 
 function Comments({ postId }) {
-  const { createComment, comments, getComments, likeComment, deleteComment } = usePost();
-  const {authState} = useAuth();
+  const { createComment, comments, getComments, likeComment, deleteComment, getCommentReplies, repliesComments } = usePost();
+  const { authState } = useAuth();
   const [textareaValue, setTextareaValue] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [show, setShow] = useState(false);
+  const [showReplyComments, setShowReplyComments] = useState(false);
 
-  const {user} = authState
+  const { user } = authState
 
   const handleTextareaChange = (event) => {
     setTextareaValue(event.target.value);
@@ -51,15 +52,26 @@ function Comments({ postId }) {
     console.log(user);
   }
 
-  const handleDeleteComment = async (commentId) =>{
+  const handleDeleteComment = async (commentId) => {
     await deleteComment(commentId);
     await getComments(postId);
   }
   console.log(comments);
-  comments.forEach(comment => {
-    console.log(comment.repliesCount);
-  });
-  
+  // comments.forEach(comment => {
+  //   console.log(comment.repliesCount);
+  // });
+
+  // const handleReplyComments = async (commentId) => {
+  //   setShowReplyComments(!showReplyComments);
+  //   await getCommentReplies(commentId)
+  // }
+
+  const handleGetCommentReplies = async (commentId) => {
+    setShowReplyComments(!showReplyComments)
+    await getCommentReplies(commentId);
+    console.log(repliesComments);
+  }
+
 
   const isTextareaEmpty = textareaValue.trim() === '';
 
@@ -127,7 +139,7 @@ function Comments({ postId }) {
                   <div className='flex justify-between items-center mt-2 text-xl'>
                     <div className='flex gap-4 items-center'>
                       <div className='flex items-center gap-1'>
-                        <PiHandsClapping onClick={() => handleLikeComment(comment._id)} className='cursor-pointer'/>
+                        <PiHandsClapping onClick={() => handleLikeComment(comment._id)} className='cursor-pointer' />
                         <span>{comment.likes.length}</span>
                       </div>
                       {/* {comment && comment.replies.length > 0 && (
@@ -138,13 +150,72 @@ function Comments({ postId }) {
                       )} */}
                       {comment.repliesCount > 0 && (
                         <div className='flex items-center gap-1'>
-                          <FaComment/>
+                          <span onClick={() => handleGetCommentReplies(comment._id)}><FaComment /></span>
                           <span>{comment.repliesCount}</span>
                         </div>
                       )}
                     </div>
-                    <p>reply</p>
+                    <p onClick={() => handleReplyComments(comment._id)}>reply</p>
                   </div>
+                  {/* {showReplyComments && (
+                    <div className='mt-2'>
+                      <textarea
+                        className="w-full h-20 p-2 border rounded-md focus:outline-none border-none"
+                        placeholder="Write your reply..."
+                       
+                      ></textarea>
+                      <div className='flex justify-end gap-2 mt-2'>
+                        <button className='p-1 rounded-xl text-white bg-red-500'>Cancel</button>
+                        <button onClick={() => handleReplyComments(comment._id)} className='p-1 rounded-xl text-white bg-green-600'>Reply</button>
+                      </div>
+                    </div>
+                  )} */}
+                  {
+                    showReplyComments && (
+                      <div className='flex flex-col gap-5 ml-10'>
+                        <div className='flex justify-between items-center'>
+                          <div className='flex gap-4 items-center'>
+                            <img src="" alt="User" />
+                            <div>
+                              <p>{comment.author.username}</p>
+                              <p>{formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}</p>
+                            </div>
+                          </div>
+                          <div className='bg-red-50 relative'>
+                            <div className='text-2xl '>
+                              <span onClick={toggleSetting}><CiSettings /></span>
+                            </div>
+                            {show && (
+                              <div className='absolute right-5 shadow-2xl bg-red-50 w-44 text-center'>
+                                <p>Report this comment</p>
+                                {user && user._id === comment.author._id && (
+                                  <div onClick={() => handleDeleteComment(comment._id)}>Delete</div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <p></p>
+                        </div>
+                        <div className='flex justify-between'>
+                          <div className='flex justify-between items-center gap-2'>
+                            <div className='flex justify-between items-center gap-2'>
+                              <PiHandsClapping />
+                              <span>1</span>
+                            </div>
+                            <div className='flex justify-between items-center gap-2'>
+                              <PiHandsClapping />
+                              <span>1</span>
+                            </div>
+                          </div>
+                          <div>
+                            <p>Reply</p>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
             </div>
