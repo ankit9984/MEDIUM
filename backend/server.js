@@ -26,7 +26,7 @@ app.use(urlencoded({extended: true}));
 app.use(cookieParser());
 connectDB();
 
-//Router path
+
 
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
